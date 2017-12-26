@@ -1,0 +1,41 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'groovy'
+    id "application"
+}
+mainClassName = "example.Application"
+jar {
+    manifest {
+        attributes 'Main-Class': "example.Application"
+    }
+}
+repositories {
+
+    mavenLocal()
+    mavenCentral()
+    /*repositories {
+        flatDir {
+            dirs '../particle-libs'
+        }
+    }*/
+    // required if using runtime-green-lightning below
+//    maven { url 'https://repository-pronghorn.forge.cloudbees.com/release' }
+}
+dependencies {
+    Properties props = new Properties()
+    new File("../gradle.properties").withReader { props.load(it) }
+    compileOnly "org.particleframework:inject-groovy:${props.projectVersion}"
+    compile "org.particleframework:runtime-groovy:${props.projectVersion}"
+
+    // use one of these servers, not both...
+    compile "org.particleframework:http-server-netty:${props.projectVersion}"
+    compile "org.particleframework.configuration:hibernate-gorm:${props.projectVersion}"
+
+    runtime 'org.apache.tomcat:tomcat-jdbc:8.0.44'
+    runtime 'com.h2database:h2:1.4.196'
+
+    runtime "ch.qos.logback:logback-classic:1.2.3"
+}
+shadowJar {
+    mergeServiceFiles()
+}
