@@ -13,15 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package example
+package galecino
 
-import grails.gorm.annotation.Entity
+import grails.gorm.transactions.Transactional
+import org.particleframework.http.annotation.Controller
+
+import javax.annotation.PostConstruct
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * @author Graeme Rocher
  * @since 1.0
  */
-@Entity
-class Book {
-    String title
+@Controller
+@Singleton
+class VehicleController {
+
+    @Inject
+    VehicleService vehicleService
+
+    List<Vehicle> index() {
+        vehicleService.list()
+    }
+
+    @Transactional
+    @PostConstruct
+    void setup() {
+        vehicleService.save 'VanderfoxCar'
+    }
 }

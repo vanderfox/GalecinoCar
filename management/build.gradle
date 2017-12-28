@@ -3,21 +3,21 @@ plugins {
     id 'groovy'
     id "application"
 }
-mainClassName = "example.Application"
+mainClassName = "galecino.Application"
 jar {
     manifest {
-        attributes 'Main-Class': "example.Application"
+        attributes 'Main-Class': "galecino.Application"
     }
 }
 repositories {
 
     mavenLocal()
     mavenCentral()
-    /*repositories {
+    repositories {
         flatDir {
-            dirs '../particle-libs'
+            dirs '../libs'
         }
-    }*/
+    }
     // required if using runtime-green-lightning below
 //    maven { url 'https://repository-pronghorn.forge.cloudbees.com/release' }
 }
