@@ -53,4 +53,8 @@ class VehicleController {
         return baos.toByteArray()
 
     }
+
+    void testWheels(Vehicle vehicle) {
+
+    }
 }
