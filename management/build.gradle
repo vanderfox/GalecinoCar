@@ -13,11 +13,7 @@ repositories {
 
     mavenLocal()
     mavenCentral()
-    repositories {
-        flatDir {
-            dirs '../libs'
-        }
-    }
+    maven { url  "https://dl.bintray.com/vanderfox/JRPiCam" }
     // required if using runtime-green-lightning below
 //    maven { url 'https://repository-pronghorn.forge.cloudbees.com/release' }
 }
@@ -26,7 +22,7 @@ dependencies {
     //new File("gradle.properties").withReader { props.load(it) }
     compileOnly "org.particleframework:inject-groovy:${particleProjectVersion}"
     compile "org.particleframework:runtime-groovy:${particleProjectVersion}"
-
+    compile "hopding.jrpicam:jrpicam:1.1.1"
     // use one of these servers, not both...
     compile "org.particleframework:http-server-netty:${particleProjectVersion}"
     compile "org.particleframework.configuration:hibernate-gorm:${particleProjectVersion}"

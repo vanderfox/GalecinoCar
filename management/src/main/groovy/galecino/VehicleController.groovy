@@ -15,12 +15,14 @@
  */
 package galecino
 
+import com.hopding.jrpicam.RPiCamera
 import grails.gorm.transactions.Transactional
 import org.particleframework.http.annotation.Controller
 
 import javax.annotation.PostConstruct
 import javax.inject.Inject
 import javax.inject.Singleton
+import java.awt.image.BufferedImage
 
 /**
  * @author Graeme Rocher
@@ -41,5 +43,14 @@ class VehicleController {
     @PostConstruct
     void setup() {
         vehicleService.save 'VanderfoxCar'
+    }
+
+
+    byte[] takeStill(Vehicle vehicle) {
+        RPiCamera piCamera = new RPiCamera("/home/pi/Pictures")
+        BufferedImage image = piCamera.takeBufferedStill()
+        ByteArrayOutputStream baos = new ByteArrayOutputStream()
+        return baos.toByteArray()
+
     }
 }
