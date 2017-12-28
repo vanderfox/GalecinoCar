@@ -32,8 +32,8 @@ dependencies {
 // run the jar task on particle-framework and copy them to this projedt until this is available publiclys
 task updateParticle(type: Copy) {
     //from '../../github/particle-framework/'
-    from fileTree("../../github/particle-framework/").include("**/*.jar").files
-    include '**/*.jar'
-    into 'particle-libs'
+    //from fileTree("../../github/particle-framework/").include("**/*.jar").files
+    //include '**/*.jar'
+    //into 'particle-libs'
 }
 

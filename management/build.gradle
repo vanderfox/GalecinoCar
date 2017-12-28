@@ -22,14 +22,14 @@ repositories {
 //    maven { url 'https://repository-pronghorn.forge.cloudbees.com/release' }
 }
 dependencies {
-    Properties props = new Properties()
-    new File("../gradle.properties").withReader { props.load(it) }
-    compileOnly "org.particleframework:inject-groovy:${props.projectVersion}"
-    compile "org.particleframework:runtime-groovy:${props.projectVersion}"
+    //Properties props = new Properties()
+    //new File("gradle.properties").withReader { props.load(it) }
+    compileOnly "org.particleframework:inject-groovy:${particleProjectVersion}"
+    compile "org.particleframework:runtime-groovy:${particleProjectVersion}"
 
     // use one of these servers, not both...
-    compile "org.particleframework:http-server-netty:${props.projectVersion}"
-    compile "org.particleframework.configuration:hibernate-gorm:${props.projectVersion}"
+    compile "org.particleframework:http-server-netty:${particleProjectVersion}"
+    compile "org.particleframework.configuration:hibernate-gorm:${particleProjectVersion}"
 
     runtime 'org.apache.tomcat:tomcat-jdbc:8.0.44'
     runtime 'com.h2database:h2:1.4.196'
