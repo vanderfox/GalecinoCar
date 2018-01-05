@@ -57,4 +57,8 @@ class VehicleController {
     void testWheels(Vehicle vehicle) {
 
     }
+
+    void pwmTest() {
+        vehicleService.pwmTest()
+    }
 }
