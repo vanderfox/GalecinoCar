@@ -2,9 +2,9 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '2.0.1'
     id 'groovy'
     id "application"
-    id "cpp"
+    //id "cpp"
 }
-apply plugin: 'cpp'
+//apply plugin: 'cpp'
 mainClassName = "galecino.Application"
 
 def SYS_INCLUDE_DIR = this.properties['system.include.dir']
@@ -38,6 +38,11 @@ dependencies {
     // use one of these servers, not both...
     compile "org.particleframework:http-server-netty:${particleProjectVersion}"
     compile "org.particleframework.configuration:hibernate-gorm:${particleProjectVersion}"
+    compile "com.pi4j:pi4j-core:1.1"
+    compile "com.pi4j:pi4j-gpio-extension:1.1"
+    compile "com.pi4j:pi4j-device:1.1"
+    compile fileTree(dir: '../libs', include: '*.jar')
+
 
     runtime 'org.apache.tomcat:tomcat-jdbc:8.0.44'
     runtime 'com.h2database:h2:1.4.196'
@@ -47,97 +52,3 @@ dependencies {
 shadowJar {
     mergeServiceFiles()
 }
-
-model {
-    components {
-        bridge(NativeLibrarySpec) {
-            sources {
-                cpp {
-                    source {
-                        srcDir 'src/main/jni'
-                        include "**/*.cpp"
-                    }
-                }
-            }
-            buildTypes {
-                debug
-                release
-            }
-        }
-    }
-    toolChains {
-        gcc(Gcc) {
-            eachPlatform {
-                if (System.properties['os.name'].equals('Mac OS X')) {
-                    cppCompiler.withArguments { args ->
-                        args << "-O2"
-                        args << "-I" + SYS_INCLUDE_DIR
-                        args << "-I" + SYS_LOCAL_INCLUDE_DIR
-                        args << "-I" + JNI_INCLUDE_DIR
-                        args << "-I" + JNI_INCLUDE_DIR + "/darwin"
-                        args << "-std=c++11"
-                    }
-                    linker.withArguments { args ->
-                        args << "-O2"
-                        args << "-lc++"
-                    }
-                } else {
-                    path "/opt/rh/devtoolset-2/root/usr/bin/gcc"
-                    cppCompiler.withArguments { args ->
-                        args << "-O2"
-                        args << "-I" + SYS_INCLUDE_DIR
-                        args << "-I" + SYS_LOCAL_INCLUDE_DIR
-                        args << "-I" + JNI_INCLUDE_DIR
-                        args << "-I" + JNI_INCLUDE_DIR + "/linux"
-                        args << "-std=c++11"
-                    }
-                    linker.withArguments { args ->
-                        args << "-O2"
-                        args << "-lstdc++"
-                    }
-                }
-            }
-        }
-        clang(Clang) {
-            eachPlatform {
-                if (System.properties['os.name'].equals('Mac OS X')) {
-                    cppCompiler.withArguments { args ->
-                        args << "-O2"
-                        args << "-I" + SYS_INCLUDE_DIR
-                        args << "-I" + SYS_LOCAL_INCLUDE_DIR
-                        args << "-I" + JNI_INCLUDE_DIR
-                        args << "-I" + JNI_INCLUDE_DIR + "/darwin"
-                        args << "-std=c++11"
-                    }
-                    linker.withArguments { args ->
-                        args << "-O2"
-                        args << "-lc++"
-                    }
-                } else {
-                    cppCompiler.withArguments { args ->
-                        args << "-O2"
-                        args << "-I" + SYS_INCLUDE_DIR
-                        args << "-I" + SYS_LOCAL_INCLUDE_DIR
-                        args << "-I" + JNI_INCLUDE_DIR
-                        args << "-I" + JNI_INCLUDE_DIR + "/linux"
-                        args << "-std=c++11"
-                    }
-                    linker.withArguments { args ->
-                        args << "-O2"
-                        args << "-lstdc++"
-                    }
-                }
-            }
-        }
-    }
-}
-
-    task copyLibBridge(type: Copy) {
-        if (System.properties['os.name'].equals('Mac OS X')) {
-            from "$projectDir/build/binaries/bridgeSharedLibrary/libbridge.dylib"
-        }
-        else {
-            from "$projectDir/build/binaries/bridgeSharedLibrary/libbridge.so"
-        }
-        into 'libs'
-    }
