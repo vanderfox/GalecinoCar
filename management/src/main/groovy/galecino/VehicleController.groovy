@@ -37,6 +37,7 @@ class VehicleController {
 
     List<Vehicle> index() {
         vehicleService.list()
+        vehicleService.pwmTest()
     }
 
     @Transactional
