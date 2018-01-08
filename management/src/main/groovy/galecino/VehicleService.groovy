@@ -9,9 +9,9 @@ import grails.gorm.services.Service
 abstract class VehicleService {
 
     private static final int SERVO_FREQUENCY = 50
-    private static final int MOTOR_STOPPED = 360
+    private static final int MOTOR_BACKWARD = 360
     private static final int MOTOR_FORWARD = 400
-    private static final int MOTOR_BACKWARD = 310
+    private static final int MOTOR_STOPPED = 310
     private static final int STEERING_LEFT = 420
     private static final int STEERING_RIGHT = 310
 
