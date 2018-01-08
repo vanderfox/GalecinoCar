@@ -65,31 +65,31 @@ class VehicleController {
 
     }
 
-    @Get("/vehicle/forward")
+    @Get
     HttpResponse<String> forward() {
        vehicleService.forward()
        return ok("forward")
     }
 
-    @Get("/vehicle/backward")
+    @Get
     HttpResponse<String> backward() {
         vehicleService.backward()
         return ok("backward")
     }
 
-    @Get("/vehicle/stop")
+    @Get
     HttpResponse<String> stop() {
         vehicleService.stop()
         return ok("stop")
     }
 
-    @Get("/vehicle/left")
+    @Get
     HttpResponse<String> left() {
         vehicleService.left()
         return ok("left")
     }
 
-    @Get("/vehicle/right")
+    @Get
     HttpResponse<String> right() {
         vehicleService.right()
         return ok("right")
