@@ -17,7 +17,9 @@ package galecino
 
 import com.hopding.jrpicam.RPiCamera
 import grails.gorm.transactions.Transactional
+import org.particleframework.http.HttpResponse
 import org.particleframework.http.annotation.Controller
+import org.particleframework.web.router.annotation.Get
 
 import javax.annotation.PostConstruct
 import javax.inject.Inject
@@ -55,11 +57,41 @@ class VehicleController {
 
     }
 
-    void testWheels(Vehicle vehicle) {
+
+    @Get("/vehicle/pwmTest")
+    HttpResponse<String> pwmTest() {
+        vehicleService.pwmTest()
+        return ok("Car Test started in endless loop")
 
     }
 
-    void pwmTest() {
-        vehicleService.pwmTest()
+    @Get("/vehicle/forward")
+    HttpResponse<String> forward() {
+       vehicleService.forward()
+       return ok("forward")
+    }
+
+    @Get("/vehicle/backward")
+    HttpResponse<String> backward() {
+        vehicleService.backward()
+        return ok("backward")
+    }
+
+    @Get("/vehicle/stop")
+    HttpResponse<String> stop() {
+        vehicleService.stop()
+        return ok("stop")
+    }
+
+    @Get("/vehicle/left")
+    HttpResponse<String> left() {
+        vehicleService.left()
+        return ok("left")
+    }
+
+    @Get("/vehicle/right")
+    HttpResponse<String> right() {
+        vehicleService.right()
+        return ok("right")
     }
 }
