@@ -61,37 +61,37 @@ class VehicleController {
     @Get("/vehicle/pwmTest")
     HttpResponse<String> pwmTest() {
         vehicleService.pwmTest()
-        return ok("Car Test started in endless loop")
+        return HttpResponse.ok("Car Test started in endless loop")
 
     }
 
     @Get
     HttpResponse<String> forward() {
        vehicleService.forward()
-       return ok("forward")
+       return HttpResponse.ok("forward")
     }
 
     @Get
     HttpResponse<String> backward() {
         vehicleService.backward()
-        return ok("backward")
+        return HttpResponse.ok("backward")
     }
 
     @Get
     HttpResponse<String> stop() {
         vehicleService.stop()
-        return ok("stop")
+        return HttpResponse.ok("stop")
     }
 
     @Get
     HttpResponse<String> left() {
         vehicleService.left()
-        return ok("left")
+        return HttpResponse.ok("left")
     }
 
     @Get
     HttpResponse<String> right() {
         vehicleService.right()
-        return ok("right")
+        return HttpResponse.ok("right")
     }
 }
