@@ -87,12 +87,13 @@ abstract class VehicleService {
         servo0.setInput(input)
     }
 
-    void steer(int angle) {
-
+    void steer(float angle) {
+        // seems like 360 right 520 left
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(50)
         Servo servo0 = new PCA9685Servo(device.getChannel(1))
         //Servo servo0 = new PWMServo()
+
         servo0.setInput(angle)
     }
 
