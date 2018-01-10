@@ -77,6 +77,32 @@ abstract class VehicleService {
         servo0.setInput(input)
     }
 
+
+    void leftAngle(int angle) {
+        PWMPCA9685Device device = new PWMPCA9685Device()
+        device.setPWMFrequency(frequency)
+        Servo servo0 = new PCA9685Servo(device.getChannel(1))
+        servo0.setInverted(true)
+        servo0.setInput(input)
+    }
+
+    void steer(int angle) {
+        int X_min = 1
+        int X_max = -1
+        int Y_min = -1
+        int Y_max = 360
+        int X_range = X_max - X_min
+        int Y_range = Y_max - Y_min
+        BigDecimal XY_ratio = X_range/Y_range
+
+        BigDecimal y = ((x-X_min) / XY_ratio + Y_min) // 1
+
+        PWMPCA9685Device device = new PWMPCA9685Device()
+        device.setPWMFrequency(50)
+        Servo servo0 = new PCA9685Servo(device.getChannel(1))
+        servo0.setInput(y as float)
+    }
+
     void right(int frequency = SERVO_FREQUENCY, int input = STEERING_RIGHT) {
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(frequency)

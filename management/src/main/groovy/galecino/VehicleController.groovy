@@ -94,4 +94,10 @@ class VehicleController {
         vehicleService.right(frequency,input)
         return HttpResponse.ok("right")
     }
+
+    @Get
+    HttpResponse<String> steer(int angle) {
+        vehicleService.steer(angle)
+        return HttpResponse.ok("angle:${angle}")
+    }
 }
