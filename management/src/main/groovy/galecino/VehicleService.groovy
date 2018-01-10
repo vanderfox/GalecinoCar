@@ -89,7 +89,7 @@ abstract class VehicleService {
     void steer(int angle) {
         int X_min = 1
         int X_max = -1
-        int Y_min = -1
+        int Y_min = 420
         int Y_max = 360
         int X_range = X_max - X_min
         int Y_range = Y_max - Y_min
