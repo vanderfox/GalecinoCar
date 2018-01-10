@@ -54,40 +54,41 @@ abstract class VehicleService {
         }
     }
 
-    void forward() {
+    void forward(int frequency = SERVO_FREQUENCY, int on = 0, int off = MOTOR_FORWARD) {
         PWMPCA9685Device device = new PWMPCA9685Device()
-        device.setPWMFrequency(SERVO_FREQUENCY)
+        device.setPWMFrequency(frequency)
         PWMPCA9685Device.PWMChannel motor0 = device.getChannel(0)
-        motor0.setPWM(0, MOTOR_FORWARD)
+        motor0.setPWM(on, off)
 
     }
 
-    void backward() {
+    void backward(int frequency = SERVO_FREQUENCY, int on = 0, int off = MOTOR_BACKWARDD) {
         PWMPCA9685Device device = new PWMPCA9685Device()
-        device.setPWMFrequency(SERVO_FREQUENCY)
+        device.setPWMFrequency(frequency)
         PWMPCA9685Device.PWMChannel motor0 = device.getChannel(0)
-        motor0.setPWM(0, MOTOR_BACKWARD)
+        motor0.setPWM(on, off)
     }
 
-    void left() {
+    void left(int frequency = SERVO_FREQUENCY, int input = STEERING_LEFT) {
         PWMPCA9685Device device = new PWMPCA9685Device()
-        device.setPWMFrequency(SERVO_FREQUENCY)
+        device.setPWMFrequency(frequency)
         Servo servo0 = new PCA9685Servo(device.getChannel(1))
-        servo0.setInput(STEERING_LEFT)
+        servo0.setInverted(true)
+        servo0.setInput(input)
     }
 
-    void right() {
+    void right(int frequency = SERVO_FREQUENCY, int input = STEERING_RIGHT) {
         PWMPCA9685Device device = new PWMPCA9685Device()
-        device.setPWMFrequency(SERVO_FREQUENCY)
+        device.setPWMFrequency(frequency)
         Servo servo0 = new PCA9685Servo(device.getChannel(1))
-        servo0.setInput(STEERING_RIGHT)
+        servo0.setInput(input)
     }
 
-    void stop() {
+    void stop(int frequency = SERVO_FREQUENCY, int on = 0, int off = MOTOR_STOP) {
         PWMPCA9685Device device = new PWMPCA9685Device()
-        device.setPWMFrequency(SERVO_FREQUENCY)
+        device.setPWMFrequency(frequency)
         PWMPCA9685Device.PWMChannel motor0 = device.getChannel(0)
-        motor0.setPWM(0, MOTOR_STOPPED)
+        motor0.setPWM(on, off)
     }
 
 }

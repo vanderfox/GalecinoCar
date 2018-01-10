@@ -66,32 +66,32 @@ class VehicleController {
     }
 
     @Get
-    HttpResponse<String> forward() {
-       vehicleService.forward()
+    HttpResponse<String> forward(int frequency, int on, int off) {
+       vehicleService.forward(frequency,on,off)
        return HttpResponse.ok("forward")
     }
 
     @Get
-    HttpResponse<String> backward() {
-        vehicleService.backward()
+    HttpResponse<String> backward(int frequency, int on, int off) {
+        vehicleService.backward(frequency, on, off)
         return HttpResponse.ok("backward")
     }
 
     @Get
-    HttpResponse<String> stop() {
-        vehicleService.stop()
+    HttpResponse<String> stop(int frequency, int on, int off) {
+        vehicleService.stop(frequency,on,off)
         return HttpResponse.ok("stop")
     }
 
     @Get
-    HttpResponse<String> left() {
-        vehicleService.left()
+    HttpResponse<String> left(int frequency, int input) {
+        vehicleService.left(frequency,input)
         return HttpResponse.ok("left")
     }
 
     @Get
-    HttpResponse<String> right() {
-        vehicleService.right()
+    HttpResponse<String> right(int frequency, int input) {
+        vehicleService.right(frequency,input)
         return HttpResponse.ok("right")
     }
 }
