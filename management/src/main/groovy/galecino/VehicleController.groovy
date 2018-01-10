@@ -84,18 +84,6 @@ class VehicleController {
     }
 
     @Get
-    HttpResponse<String> left(int frequency, int input) {
-        vehicleService.left(frequency,input)
-        return HttpResponse.ok("left")
-    }
-
-    @Get
-    HttpResponse<String> right(int frequency, int input) {
-        vehicleService.right(frequency,input)
-        return HttpResponse.ok("right")
-    }
-
-    @Get
     HttpResponse<String> steer(float angle) {
         vehicleService.steer(angle)
         return HttpResponse.ok("angle:${angle}")

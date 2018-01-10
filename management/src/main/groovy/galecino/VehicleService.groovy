@@ -70,22 +70,6 @@ abstract class VehicleService {
         motor0.setPWM(on, off)
     }
 
-    void left(int frequency = SERVO_FREQUENCY, int input = STEERING_LEFT) {
-        PWMPCA9685Device device = new PWMPCA9685Device()
-        device.setPWMFrequency(frequency)
-        Servo servo0 = new PCA9685Servo(device.getChannel(1))
-        servo0.setInverted(true)
-        servo0.setInput(input)
-    }
-
-
-    void leftAngle(int angle) {
-        PWMPCA9685Device device = new PWMPCA9685Device()
-        device.setPWMFrequency(frequency)
-        Servo servo0 = new PCA9685Servo(device.getChannel(1))
-        servo0.setInverted(true)
-        servo0.setInput(input)
-    }
 
     void steer(float angle) {
         // seems like 360 right 520 left
@@ -93,15 +77,10 @@ abstract class VehicleService {
         device.setPWMFrequency(50)
         Servo servo0 = new PCA9685Servo(device.getChannel(1))
         //Servo servo0 = new PWMServo()
-
+        if (angle == 0) {
+            angle = 0.3
+        }
         servo0.setInput(angle)
-    }
-
-    void right(int frequency = SERVO_FREQUENCY, int input = STEERING_RIGHT) {
-        PWMPCA9685Device device = new PWMPCA9685Device()
-        device.setPWMFrequency(frequency)
-        Servo servo0 = new PCA9685Servo(device.getChannel(1))
-        servo0.setInput(input)
     }
 
     void stop(int frequency = SERVO_FREQUENCY, int on = 0, int off = MOTOR_STOP) {
