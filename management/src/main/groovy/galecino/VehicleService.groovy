@@ -95,7 +95,7 @@ abstract class VehicleService {
         int Y_range = Y_max - Y_min
         BigDecimal XY_ratio = X_range/Y_range
 
-        BigDecimal y = ((x-X_min) / XY_ratio + Y_min) // 1
+        BigDecimal y = ((angle-X_min) / XY_ratio + Y_min) // 1
 
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(50)
