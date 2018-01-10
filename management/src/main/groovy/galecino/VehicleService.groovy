@@ -3,6 +3,7 @@ package galecino
 import com.robo4j.hw.rpi.Servo
 import com.robo4j.hw.rpi.i2c.pwm.PCA9685Servo
 import com.robo4j.hw.rpi.i2c.pwm.PWMPCA9685Device
+import com.robo4j.hw.rpi.pwm.PWMServo
 import grails.gorm.services.Service
 
 @Service(Vehicle)
@@ -87,20 +88,12 @@ abstract class VehicleService {
     }
 
     void steer(int angle) {
-        int X_min = 1
-        int X_max = -1
-        int Y_min = 420
-        int Y_max = 360
-        int X_range = X_max - X_min
-        int Y_range = Y_max - Y_min
-        BigDecimal XY_ratio = X_range/Y_range
-
-        BigDecimal y = ((angle-X_min) / XY_ratio + Y_min) // 1
 
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(50)
         Servo servo0 = new PCA9685Servo(device.getChannel(1))
-        servo0.setInput(y as float)
+        //Servo servo0 = new PWMServo()
+        servo0.setInput(angle)
     }
 
     void right(int frequency = SERVO_FREQUENCY, int input = STEERING_RIGHT) {
