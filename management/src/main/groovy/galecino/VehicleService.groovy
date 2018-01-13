@@ -90,4 +90,37 @@ abstract class VehicleService {
         motor0.setPWM(on, off)
     }
 
+    void drive(float angle, float throttle, String driveMode = "user", Boolean recording = false) {
+        // set steering
+        steer(angle)
+        int pulse = 0
+        if (throttle > 0) {
+            pulse = map_range(throttle,
+            0, 1,
+            350, 300)
+        } else {
+            pulse = map_range(throttle,
+                    0, 1,
+                    490, 350)
+        }
+        // set throttle
+        forward(50,pulse)
+
+
+    }
+
+    private float map_range(x, X_min, X_max, Y_min, Y_max) {
+    //    '''
+    //Linear mapping between two ranges of values
+    //'''
+        float X_range = X_max - X_min
+        float Y_range = Y_max - Y_min
+        float XY_ratio = X_range / Y_range
+
+        int y = ((x - X_min) / XY_ratio + Y_min) // 1
+
+        return y
+    }
+
+
 }
