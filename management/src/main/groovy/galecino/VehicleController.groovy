@@ -90,7 +90,7 @@ class VehicleController {
     }
 
     @Get("/drive")
-    HttpResponse<String> drive(float angle, float throttle, String driveMode = "user", Boolean recording = false) {
+    HttpResponse<String> drive(float angle, float throttle, String drive_mode = "user", Boolean recording = false) {
         //vehicleService.steer(angle)
         vehicleService.drive(angle,throttle)
         return HttpResponse.ok("angle:${angle} throttle:${throttle}")
