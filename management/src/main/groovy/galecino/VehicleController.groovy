@@ -30,7 +30,7 @@ import java.awt.image.BufferedImage
  * @author Graeme Rocher
  * @since 1.0
  */
-@Controller
+@Controller("/")
 @Singleton
 class VehicleController {
 
@@ -58,7 +58,7 @@ class VehicleController {
     }
 
 
-    @Get("/vehicle/pwmTest")
+    @Get("/pwmTest")
     HttpResponse<String> pwmTest() {
         vehicleService.pwmTest()
         return HttpResponse.ok("Car Test started in endless loop")
@@ -83,15 +83,16 @@ class VehicleController {
         return HttpResponse.ok("stop")
     }
 
-    @Get
-    HttpResponse<String> steer(float angle) {
-        vehicleService.steer(angle)
+    @Get("/steer")
+    HttpResponse<String> steer(float angle, float trim) {
+        vehicleService.steer(angle,trim)
         return HttpResponse.ok("angle:${angle}")
     }
 
-    @Get
+    @Get("/drive")
     HttpResponse<String> drive(float angle, float throttle, String driveMode = "user", Boolean recording = false) {
         //vehicleService.steer(angle)
         vehicleService.drive(angle,throttle)
+        return HttpResponse.ok("angle:${angle} throttle:${throttle}")
     }
 }
