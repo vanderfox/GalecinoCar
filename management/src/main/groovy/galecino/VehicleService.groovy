@@ -79,10 +79,6 @@ abstract class VehicleService {
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(50)
         Servo servo0 = new PCA9685Servo(device.getChannel(1))
-        //Servo servo0 = new PWMServo()
-        if (angle == 0) {
-            angle = 0.3
-        }
         servo0.setInput(angle)
         if (trim == 0) {
            trim = configTrim
