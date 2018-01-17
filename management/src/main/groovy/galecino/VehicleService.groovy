@@ -5,6 +5,7 @@ import com.robo4j.hw.rpi.i2c.pwm.PCA9685Servo
 import com.robo4j.hw.rpi.i2c.pwm.PWMPCA9685Device
 import com.robo4j.hw.rpi.pwm.PWMServo
 import grails.gorm.services.Service
+import org.particleframework.context.annotation.Value
 
 @Service(Vehicle)
 abstract class VehicleService {
@@ -15,6 +16,8 @@ abstract class VehicleService {
     private static final int MOTOR_STOPPED = 310
     private static final int STEERING_LEFT = 420
     private static final int STEERING_RIGHT = 310
+    @Value('galecino.servo.trim:0.0')
+    protected float configTrim
 
     abstract List<Vehicle> list()
     abstract Vehicle save(String name)
@@ -81,9 +84,11 @@ abstract class VehicleService {
             angle = 0.3
         }
         servo0.setInput(angle)
-        if (trim != 0.0) {
-            servo0.setTrim(trim)
+        if (trim == 0) {
+           trim = configTrim
         }
+        servo0.setTrim(trim)
+        System.out.println("steer angle:${angle} trim:${trim}")
 
     }
 
