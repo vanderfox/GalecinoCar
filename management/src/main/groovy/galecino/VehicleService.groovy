@@ -62,6 +62,7 @@ abstract class VehicleService {
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(frequency)
         PWMPCA9685Device.PWMChannel motor0 = device.getChannel(0)
+        System.out.println("")
         motor0.setPWM(on, off)
 
     }
@@ -102,12 +103,12 @@ abstract class VehicleService {
         if (throttle > 0) {
             pulse = map_range(throttle,
             0, 1,
-            350, 300)
+            370, 600)
             System.out.println("fwd Pulse=${pulse}")
         } else {
             pulse = map_range(throttle,
                     0, 1,
-                    490, 350)
+                    294, 1)
             System.out.println("backwd  Pulse=${pulse}")
         }
         // set throttle
