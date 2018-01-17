@@ -102,10 +102,12 @@ abstract class VehicleService {
             pulse = map_range(throttle,
             0, 1,
             350, 300)
+            System.out.println("fwd Pulse=${pulse}")
         } else {
             pulse = map_range(throttle,
                     0, 1,
                     490, 350)
+            System.out.println("backwd  Pulse=${pulse}")
         }
         // set throttle
         forward(50,pulse)
