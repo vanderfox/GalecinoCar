@@ -16,6 +16,10 @@ abstract class VehicleService {
     private static final int MOTOR_STOPPED = 310
     private static final int STEERING_LEFT = 420
     private static final int STEERING_RIGHT = 310
+    private static final int MAX_THROTTLE_FORWORD = 600
+    private static final int MIN_THROTTLE_FORWORD = 380
+    private static final int MAX_THROTTLE_BACKWARD = 1
+    private static final int MIN_THROTTLE_BACKWARD = 293
     @Value('galecino.servo.trim:0.0')
     protected float configTrim
 
@@ -104,12 +108,12 @@ abstract class VehicleService {
         if (throttle > 0) {
             pulse = map_range(throttle,
             0, 1,
-            370, 600)
+            MIN_THROTTLE_FORWORD, MAX_THROTTLE_FORWORD)
             System.out.println("fwd Pulse=${pulse}")
         } else {
             pulse = map_range(throttle,
-                    0, 1,
-                    294, 1)
+                    -1, 0,
+                    MIN_THROTTLE_BACKWARD, MAX_THROTTLE_BACKWARD)
             System.out.println("backwd  Pulse=${pulse}")
         }
         // set throttle
