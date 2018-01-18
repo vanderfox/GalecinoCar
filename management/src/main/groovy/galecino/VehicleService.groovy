@@ -81,6 +81,7 @@ abstract class VehicleService {
         device.setPWMFrequency(50)
         Servo servo0 = new PCA9685Servo(device.getChannel(1))
         servo0.setInput(angle)
+        System.out.println("configTrim in service=${configTrim}")
         if (trim == 0) {
            trim = configTrim
         }
