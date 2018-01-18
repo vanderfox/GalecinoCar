@@ -19,6 +19,7 @@ import com.hopding.jrpicam.RPiCamera
 import grails.gorm.transactions.Transactional
 import org.particleframework.context.annotation.Value
 import org.particleframework.http.HttpResponse
+import org.particleframework.http.MediaType
 import org.particleframework.http.annotation.Controller
 import org.particleframework.web.router.annotation.Get
 import org.particleframework.web.router.annotation.Post
@@ -55,12 +56,20 @@ class VehicleController {
     }
 
 
-    byte[] takeStill(Vehicle vehicle) {
+    byte[] takeStill() {
         RPiCamera piCamera = new RPiCamera("/home/pi/Pictures")
         BufferedImage image = piCamera.takeBufferedStill()
         ByteArrayOutputStream baos = new ByteArrayOutputStream()
         return baos.toByteArray()
 
+    }
+
+
+    @Get("/video")
+    HttpResponse<byte[]> video() {
+        byte[] image = takeStill()
+
+        return HttpResponse.ok(image).header("Content-type","multipart/x-mixed-replace;boundary=--boundarydonotcross")
     }
 
 
@@ -96,7 +105,8 @@ class VehicleController {
         return HttpResponse.ok("angle:${angle}")
     }
 
-    @Get("/drive")
+
+    @Post(consumes = MediaType.APPLICATION_FORM_URLENCODED)
     HttpResponse<String> drive(float angle, float throttle, String drive_mode = "user", Boolean recording = false) {
         //vehicleService.steer(angle)
         System.out.println("drive called")
