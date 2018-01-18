@@ -21,11 +21,13 @@ import org.particleframework.context.annotation.Value
 import org.particleframework.http.HttpResponse
 import org.particleframework.http.annotation.Controller
 import org.particleframework.web.router.annotation.Get
+import org.particleframework.web.router.annotation.Post
 
 import javax.annotation.PostConstruct
 import javax.inject.Inject
 import javax.inject.Singleton
 import java.awt.image.BufferedImage
+import org.particleframework.http.MediaType
 
 /**
  * @author Graeme Rocher
@@ -97,6 +99,7 @@ class VehicleController {
     @Get("/drive")
     HttpResponse<String> drive(float angle, float throttle, String drive_mode = "user", Boolean recording = false) {
         //vehicleService.steer(angle)
+        System.out.println("drive called")
         vehicleService.drive(angle,throttle)
         return HttpResponse.ok("angle:${angle} throttle:${throttle}")
     }
