@@ -17,6 +17,7 @@ package galecino
 
 import com.hopding.jrpicam.RPiCamera
 import grails.gorm.transactions.Transactional
+import org.particleframework.context.annotation.Value
 import org.particleframework.http.HttpResponse
 import org.particleframework.http.annotation.Controller
 import org.particleframework.web.router.annotation.Get
@@ -36,6 +37,9 @@ class VehicleController {
 
     @Inject
     VehicleService vehicleService
+
+    @Value('galecino.servo.trim:0.0')
+    protected float configTrim
 
     List<Vehicle> index() {
         vehicleService.list()
@@ -85,6 +89,7 @@ class VehicleController {
 
     @Get("/steer")
     HttpResponse<String> steer(float angle, float trim) {
+        System.out.println("configTrim in controller=${configTrim}")
         vehicleService.steer(angle,trim)
         return HttpResponse.ok("angle:${angle}")
     }
