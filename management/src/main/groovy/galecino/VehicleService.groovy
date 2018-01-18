@@ -113,7 +113,7 @@ abstract class VehicleService {
         } else {
             pulse = map_range(throttle,
                     -1, 0,
-                    MIN_THROTTLE_BACKWARD, MAX_THROTTLE_BACKWARD)
+                    MAX_THROTTLE_BACKWARD, MIN_THROTTLE_BACKWARD)
             System.out.println("backwd  Pulse=${pulse}")
         }
         // set throttle
