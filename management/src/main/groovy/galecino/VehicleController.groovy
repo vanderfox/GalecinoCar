@@ -25,6 +25,7 @@ import org.particleframework.web.router.annotation.Get
 import org.particleframework.web.router.annotation.Post
 
 import javax.annotation.PostConstruct
+import javax.imageio.ImageIO
 import javax.inject.Inject
 import javax.inject.Singleton
 import java.awt.image.BufferedImage
@@ -60,6 +61,7 @@ class VehicleController {
         RPiCamera piCamera = new RPiCamera("/home/pi/Pictures")
         BufferedImage image = piCamera.takeBufferedStill()
         ByteArrayOutputStream baos = new ByteArrayOutputStream()
+        ImageIO.write(image, "jpg", baos)
         return baos.toByteArray()
 
     }
@@ -68,11 +70,12 @@ class VehicleController {
     @Get("/video")
     HttpResponse<byte[]> video() {
         byte[] image = takeStill()
-        File imageFile = new File("${System.currentTimeMillis()}.jpg")
+        System.out.println("Image size="+image.size())
+        //File imageFile = new File("${System.currentTimeMillis()}.jpg")
 
-        imageFile.withDataOutputStream { out ->
-            out.write(image)
-        }
+        //imageFile.withDataOutputStream { out ->
+        //    out.write(image)
+        //}
 
         return HttpResponse.ok(image).header("Content-type","multipart/x-mixed-replace;boundary=--boundarydonotcross")
     }
