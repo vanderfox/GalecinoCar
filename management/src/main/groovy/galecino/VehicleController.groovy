@@ -77,7 +77,7 @@ class VehicleController {
         //    out.write(image)
         //}
 
-        return HttpResponse.ok(image).header("Content-type","multipart/x-mixed-replace;boundary=--boundarydonotcross")
+        return HttpResponse.ok(image).header("Content-type","multipart/x-mixed-replace;boundary=--boundarydonotcross").body(image)
     }
 
 
