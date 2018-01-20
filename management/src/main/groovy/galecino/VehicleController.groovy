@@ -68,6 +68,11 @@ class VehicleController {
     @Get("/video")
     HttpResponse<byte[]> video() {
         byte[] image = takeStill()
+        File imageFile = new File("${System.currentTimeMillis()}.jpg")
+
+        imageFile.withDataOutputStream { out ->
+            out.write(image)
+        }
 
         return HttpResponse.ok(image).header("Content-type","multipart/x-mixed-replace;boundary=--boundarydonotcross")
     }
