@@ -1,6 +1,9 @@
 package galecino
 
 import com.hopding.jrpicam.RPiCamera
+import com.hopding.jrpicam.enums.AWB
+import com.hopding.jrpicam.enums.DRC
+import com.hopding.jrpicam.enums.Encoding
 import com.robo4j.hw.rpi.Servo
 import com.robo4j.hw.rpi.i2c.pwm.PCA9685Servo
 import com.robo4j.hw.rpi.i2c.pwm.PWMPCA9685Device
@@ -145,15 +148,33 @@ abstract class VehicleService {
 
     byte[] takeStill() {
         if (!piCamera) {
-            synchronized(piCamera) {
+            synchronized(this) {
+                long startTime = System.currentTimeMillis()
                 piCamera = new RPiCamera()
+                piCamera.setAWB(AWB.AUTO) 	    // Change Automatic White Balance setting to automatic
+                        .setDRC(DRC.OFF) 			// Turn off Dynamic Range Compression
+                        .setContrast(100) 			// Set maximum contrast
+                        .setSharpness(100)		    // Set maximum sharpness
+                        .setQuality(100) 		    // Set maximum quality
+                        .setTimeout(0)		    // Wait 1 second to take the image
+                        .turnOnPreview()            // Turn on image preview
+                        .setEncoding(Encoding.JPG) //
+                long endTime = System.currentTimeMillis()
+                System.out.println("init camera took ${endTime-startTime}ms")
             }
-
         }
+        long startTime = System.currentTimeMillis()
+
         BufferedImage image = piCamera.takeBufferedStill()
+        long endTime = System.currentTimeMillis()
+        System.out.println("camera pic took ${endTime-startTime}ms")
+        startTime = System.currentTimeMillis()
         ByteArrayOutputStream baos = new ByteArrayOutputStream()
         ImageIO.write(image, "jpg", baos)
-        return baos.toByteArray()
+        byte[] imageOut = baos.toByteArray()
+        endTime = System.currentTimeMillis()
+        System.out.println("pic jpg convert took ${endTime-startTime}ms")
+        imageOut
 
     }
 
