@@ -1,11 +1,15 @@
 package galecino
 
+import com.hopding.jrpicam.RPiCamera
 import com.robo4j.hw.rpi.Servo
 import com.robo4j.hw.rpi.i2c.pwm.PCA9685Servo
 import com.robo4j.hw.rpi.i2c.pwm.PWMPCA9685Device
 import com.robo4j.hw.rpi.pwm.PWMServo
 import grails.gorm.services.Service
 import org.particleframework.context.annotation.Value
+
+import javax.imageio.ImageIO
+import java.awt.image.BufferedImage
 
 @Service(Vehicle)
 abstract class VehicleService {
@@ -25,6 +29,9 @@ abstract class VehicleService {
 
     abstract List<Vehicle> list()
     abstract Vehicle save(String name)
+
+    RPiCamera piCamera
+
     void pwmTest() {
         System.out.println("Creating device...");
         PWMPCA9685Device device = new PWMPCA9685Device();
@@ -134,6 +141,22 @@ abstract class VehicleService {
 
         return y
     }
+
+
+    byte[] takeStill() {
+        if (!piCamera) {
+            synchronized(piCamera) {
+                piCamera = new RPiCamera()
+            }
+
+        }
+        BufferedImage image = piCamera.takeBufferedStill()
+        ByteArrayOutputStream baos = new ByteArrayOutputStream()
+        ImageIO.write(image, "jpg", baos)
+        return baos.toByteArray()
+
+    }
+
 
 
 }

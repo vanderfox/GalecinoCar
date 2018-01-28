@@ -59,16 +59,11 @@ class VehicleController {
 
 
     byte[] takeStill() {
-        RPiCamera piCamera = new RPiCamera("/home/pi/Pictures")
-        BufferedImage image = piCamera.takeBufferedStill()
-        ByteArrayOutputStream baos = new ByteArrayOutputStream()
-        ImageIO.write(image, "jpg", baos)
-        return baos.toByteArray()
-
+       return vehicleService.takeStill()
     }
 
 
-    @Get(produces = "multipart/x-mixed-replace;boundary=--boundarydonotcross")
+    @Get(produces = "image/jpeg")
     byte[] video() {
         byte[] image = takeStill()
         System.out.println("Image size="+image.size())
