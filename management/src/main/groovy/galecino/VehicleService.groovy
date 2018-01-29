@@ -24,9 +24,9 @@ abstract class VehicleService {
     private static final int STEERING_LEFT = 420
     private static final int STEERING_RIGHT = 310
     private static final int MAX_THROTTLE_FORWORD = 600
-    private static final int MIN_THROTTLE_FORWORD = 380
+    private static final int MIN_THROTTLE_FORWORD = 400 
     private static final int MAX_THROTTLE_BACKWARD = 1
-    private static final int MIN_THROTTLE_BACKWARD = 293
+    private static final int MIN_THROTTLE_BACKWARD = 310 
     @Value('galecino.servo.trim:0.0')
     protected float configTrim
 
@@ -152,12 +152,9 @@ abstract class VehicleService {
                 long startTime = System.currentTimeMillis()
                 piCamera = new RPiCamera()
                 piCamera.setAWB(AWB.AUTO) 	    // Change Automatic White Balance setting to automatic
-                        .setDRC(DRC.OFF) 			// Turn off Dynamic Range Compression
-                        .setContrast(100) 			// Set maximum contrast
-                        .setSharpness(100)		    // Set maximum sharpness
-                        .setQuality(100) 		    // Set maximum quality
-                        .setTimeout(0)		    // Wait 1 second to take the image
-                        .turnOnPreview()            // Turn on image preview
+                        .setTimeout(30)		    // Wait 1 second to take the image
+                        .setBrightness(60)
+                        .turnOffPreview()            // Turn on image preview
                         .setEncoding(Encoding.JPG) //
                 long endTime = System.currentTimeMillis()
                 System.out.println("init camera took ${endTime-startTime}ms")
@@ -165,7 +162,7 @@ abstract class VehicleService {
         }
         long startTime = System.currentTimeMillis()
 
-        BufferedImage image = piCamera.takeBufferedStill()
+        BufferedImage image = piCamera.takeBufferedStill(160,120)
         long endTime = System.currentTimeMillis()
         System.out.println("camera pic took ${endTime-startTime}ms")
         startTime = System.currentTimeMillis()
