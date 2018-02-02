@@ -66,15 +66,18 @@ class VehicleController {
     @Get(produces = "image/jpeg")
     HttpResponse<byte[]> video() {
         byte[] image = takeStill()
-        System.out.println("Image size="+image.size())
+        System.out.println("Image size="+image?.size())
         //File imageFile = new File("${System.currentTimeMillis()}.jpg")
 
         //imageFile.withDataOutputStream { out ->
         //    out.write(image)
         //}
-        ByteBuffer byteBuffer = ByteBuffer.wrap(image)
-
+        //ByteBuffer byteBuffer = ByteBuffer.wrap(image)
+        if (!image) {
+            image = takeStill() //retry sometimes its null	
+	}
         return HttpResponse.ok(image).header("Content-type","multipart/x-mixed-replace;boundary=--boundarydonotcross")
+
        //return image
     }
 
@@ -112,7 +115,7 @@ class VehicleController {
     }
 
 
-    @Get(consumes = MediaType.APPLICATION_FORM_URLENCODED)
+    @Get(produces = 'text/html')
     HttpResponse<String> drive(float angle, float throttle, String drive_mode = "user", Boolean recording = false) {
         //vehicleService.steer(angle)
         System.out.println("drive called")

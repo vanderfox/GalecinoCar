@@ -167,11 +167,18 @@ abstract class VehicleService {
         System.out.println("camera pic took ${endTime-startTime}ms")
         startTime = System.currentTimeMillis()
         ByteArrayOutputStream baos = new ByteArrayOutputStream()
+        if (!image) {
+          image = piCamera.takeBufferedStill(160,120)
+	}
+        if (image) {
         ImageIO.write(image, "jpg", baos)
         byte[] imageOut = baos.toByteArray()
         endTime = System.currentTimeMillis()
         System.out.println("pic jpg convert took ${endTime-startTime}ms")
         imageOut
+        } else {
+          null
+        }
 
     }
 
