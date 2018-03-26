@@ -44,7 +44,8 @@ dependencies {
     compile fileTree(dir: '../libs', include: '*.jar')
     compile "org.ow2.asm:asm:5.2"
     compile "org.ow2.asm:asm-commons:5.2"
-
+    //compile "org.bytedeco.javacpp-presets:tensorflow:1.5.0-1.4"
+    compile "org.tensorflow:tensorflow:1.6.0"
 
     runtime 'org.apache.tomcat:tomcat-jdbc:8.0.44'
     runtime 'com.h2database:h2:1.4.196'
