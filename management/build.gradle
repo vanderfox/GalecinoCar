@@ -6,7 +6,7 @@ plugins {
 }
 //apply plugin: 'cpp'
 mainClassName = "galecino.Application"
-
+//mainClassName = "TensorFlowExample"
 def SYS_INCLUDE_DIR = this.properties['system.include.dir']
 def SYS_LOCAL_INCLUDE_DIR = this.properties['system.local.include.dir']
 def JNI_INCLUDE_DIR = this.properties['jni.include.dir']
@@ -32,12 +32,12 @@ repositories {
 dependencies {
     //Properties props = new Properties()
     //new File("gradle.properties").withReader { props.load(it) }
-    compileOnly "org.particleframework:inject-groovy:${particleProjectVersion}"
-    compile "org.particleframework:runtime-groovy:${particleProjectVersion}"
+    compileOnly "io.micronaut:inject-groovy:${particleProjectVersion}"
+    compile "io.micronaut:runtime-groovy:${particleProjectVersion}"
     compile "hopding.jrpicam:jrpicam:1.1.1"
     // use one of these servers, not both...
-    compile "org.particleframework:http-server-netty:${particleProjectVersion}"
-    compile "org.particleframework.configuration:hibernate-gorm:${particleProjectVersion}"
+    compile "io.micronaut:http-server-netty:${particleProjectVersion}"
+    compile "io.micronaut.configuration:hibernate-gorm:${particleProjectVersion}"
     compile "com.pi4j:pi4j-core:1.1"
     compile "com.pi4j:pi4j-gpio-extension:1.1"
     compile "com.pi4j:pi4j-device:1.1"

@@ -17,18 +17,18 @@ package galecino
 
 import com.hopding.jrpicam.RPiCamera
 import grails.gorm.transactions.Transactional
-import org.particleframework.context.annotation.Value
-import org.particleframework.http.HttpResponse
-import org.particleframework.http.MediaType
-import org.particleframework.http.annotation.Controller
-import org.particleframework.http.annotation.Get
-import org.particleframework.http.annotation.Post
+import io.micronaut.context.annotation.Value
+import io.micronaut.http.HttpResponse
+import io.micronaut.http.MediaType
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Post
 import javax.annotation.PostConstruct
 import javax.imageio.ImageIO
 import javax.inject.Inject
 import javax.inject.Singleton
 import java.awt.image.BufferedImage
-import org.particleframework.http.MediaType
+import io.micronaut.http.MediaType
 
 import java.nio.ByteBuffer
 
@@ -43,7 +43,7 @@ class VehicleController {
     @Inject
     VehicleService vehicleService
 
-    @Value('galecino.servo.trim:0.0')
+    @Value('${galecino.servo.trim:0.0}')
     protected float configTrim
 
     List<Vehicle> index() {

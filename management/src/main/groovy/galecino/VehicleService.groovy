@@ -9,7 +9,7 @@ import com.robo4j.hw.rpi.i2c.pwm.PCA9685Servo
 import com.robo4j.hw.rpi.i2c.pwm.PWMPCA9685Device
 import com.robo4j.hw.rpi.pwm.PWMServo
 import grails.gorm.services.Service
-import org.particleframework.context.annotation.Value
+import io.micronaut.context.annotation.Value
 
 import javax.imageio.ImageIO
 import java.awt.image.BufferedImage
@@ -27,7 +27,7 @@ abstract class VehicleService {
     private static final int MIN_THROTTLE_FORWORD = 400 
     private static final int MAX_THROTTLE_BACKWARD = 1
     private static final int MIN_THROTTLE_BACKWARD = 310 
-    @Value('galecino.servo.trim:0.0')
+    @Value('${galecino.servo.trim:0.0}')
     protected float configTrim
 
     abstract List<Vehicle> list()
