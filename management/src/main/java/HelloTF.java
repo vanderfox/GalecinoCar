@@ -3,6 +3,9 @@ import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.TensorFlow;
 
+/**
+ * this tests if the native tensorflow libs are installed and working properly
+ */
 public class HelloTF {
     public static void main(String[] args) throws Exception {
         try (Graph g = new Graph()) {

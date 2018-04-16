@@ -34,6 +34,7 @@ abstract class VehicleService {
     abstract Vehicle save(String name)
 
     RPiCamera piCamera
+    Process process // this is the process python is running in pilot mode
 
     void pwmTest() {
         System.out.println("Creating device...");
@@ -113,21 +114,33 @@ abstract class VehicleService {
 
     void drive(float angle, float throttle, String driveMode = "user", Boolean recording = false) {
         // set steering
-        steer(angle)
-        int pulse = 0
-        if (throttle > 0) {
-            pulse = map_range(throttle,
-            0, 1,
-            MIN_THROTTLE_FORWORD, MAX_THROTTLE_FORWORD)
-            System.out.println("fwd Pulse=${pulse}")
-        } else {
-            pulse = map_range(throttle,
-                    -1, 0,
-                    MAX_THROTTLE_BACKWARD, MIN_THROTTLE_BACKWARD)
-            System.out.println("backwd  Pulse=${pulse}")
+        if (driveMode == "user") {
+            if (process && process?.alive) {
+                process.destroyForcibly()
+            }
+            steer(angle)
+            int pulse = 0
+            if (throttle > 0) {
+                pulse = map_range(throttle,
+                        0, 1,
+                        MIN_THROTTLE_FORWORD, MAX_THROTTLE_FORWORD)
+                System.out.println("fwd Pulse=${pulse}")
+            } else {
+                pulse = map_range(throttle,
+                        -1, 0,
+                        MAX_THROTTLE_BACKWARD, MIN_THROTTLE_BACKWARD)
+                System.out.println("backwd  Pulse=${pulse}")
+            }
+            // set throttle
+            forward(50, 0, pulse)
+        } else if (driveMode == "pilot") {
+            //stop all remote control and reset motors?
+            if (!process || !process.alive) {
+                //stop all remote control and reset motors in case car is moving
+                stop()
+                Process process = "python galenciocar.py".execute()
+            }
         }
-        // set throttle
-        forward(50,0,pulse)
 
 
     }

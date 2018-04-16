@@ -23,6 +23,11 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
+import io.reactivex.Flowable
+import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
+import org.reactivestreams.Publisher
+
 import javax.annotation.PostConstruct
 import javax.imageio.ImageIO
 import javax.inject.Inject
@@ -75,10 +80,32 @@ class VehicleController {
         //ByteBuffer byteBuffer = ByteBuffer.wrap(image)
         if (!image) {
             image = takeStill() //retry sometimes its null	
-	}
+	    }
         return HttpResponse.ok(image).header("Content-type","multipart/x-mixed-replace;boundary=--boundarydonotcross")
 
        //return image
+    }
+
+
+
+    @Get(produces = "image/jpeg")
+    Publisher<HttpResponse> videoRx() {
+        //byte[] image = takeStill()
+        System.out.println("Image size="+image?.size())
+        //File imageFile = new File("${System.currentTimeMillis()}.jpg")
+
+        //imageFile.withDataOutputStream { out ->
+        //    out.write(image)
+        //}
+        //ByteBuffer byteBuffer = ByteBuffer.wrap(image)
+        //if (!image) {
+        //    image = takeStill() //retry sometimes its null
+        //}
+        Flowable<byte[]> stillFlow = Flowable.fromArray(takeStill())
+
+        return Flowable.just(HttpResponse.ok(Single.fromPublisher(stillFlow).blockingGet()).header("Content-type","multipart/x-mixed-replace;boundary=--boundarydonotcross"))
+
+        //return image
     }
 
 
