@@ -23,9 +23,18 @@ jar {
 }
 repositories {
 
+    maven {
+        credentials {
+            // define these in .gradle/gradle.properties below your HOME directory
+            username micronautRepoUsername
+            password micronautRepoPassword
+        }
+        url 'https://repo.micronaut.io/artifactory/libs-snapshots-local'
+    }
     mavenLocal()
     mavenCentral()
     maven { url  "https://dl.bintray.com/vanderfox/JRPiCam" }
+
     // required if using runtime-green-lightning below
 //    maven { url 'https://repository-pronghorn.forge.cloudbees.com/release' }
 }
