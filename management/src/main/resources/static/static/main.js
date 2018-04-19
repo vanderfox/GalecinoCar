@@ -36,8 +36,8 @@ var driveHandler = new function() {
 
     this.load = function() {
       var currentLocation = window.location.protocol + "//" + window.location.host;
-      driveURL = currentLocation + ':8887/drive'
-      vehicleURL = currentLocation + ':8887/drive'
+      driveURL = currentLocation + ':/drive'
+      vehicleURL = currentLocation + '/drive'
       //alert("driveURL="+driveURL+" vehicleURL="+vehicleURL);
 
       setBindings()
@@ -435,7 +435,7 @@ var driveHandler = new function() {
     };
 
     var brake = function(i){
-          console.log('post drive: ' + i)
+          //console.log('post drive: ' + i)
           state.tele.user.angle = 0
           state.tele.user.throttle = 0
           state.recording = false
