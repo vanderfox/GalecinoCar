@@ -124,15 +124,16 @@ abstract class VehicleService {
                 pulse = map_range(throttle,
                         0, 1,
                         MIN_THROTTLE_FORWORD, MAX_THROTTLE_FORWORD)
-                System.out.println("fwd Pulse=${pulse}")
+                System.out.println("fwd Pulse=${pulse} throttle:"+throttle)
             } else {
                 if (throttle < 0) {
                     pulse = map_range(throttle,
                             -1, 0,
                             MAX_THROTTLE_BACKWARD, MIN_THROTTLE_BACKWARD)
-                    System.out.println("backwd  Pulse=${pulse}")
+                    System.out.println("backwd  Pulse=${pulse} throttle:"+throttle)
                 }
                 if (throttle == 0) {
+                    System.out.println("stop")
                     stop(50)
                     return
                 }
