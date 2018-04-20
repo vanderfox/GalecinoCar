@@ -36,7 +36,7 @@ var driveHandler = new function() {
 
     this.load = function() {
       var currentLocation = window.location.protocol + "//" + window.location.host;
-      driveURL = currentLocation + ':/drive'
+      driveURL = currentLocation + '/drive'
       vehicleURL = currentLocation + '/drive'
       //alert("driveURL="+driveURL+" vehicleURL="+vehicleURL);
 
