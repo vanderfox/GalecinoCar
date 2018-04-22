@@ -67,7 +67,7 @@ abstract class VehicleService {
                             if (process && process?.alive) {
                                 process.destroyForcibly()
                             }
-                            steer(angle)
+                            steer(command.angle)
                             int pulse = 0
                             if (throttle > 0) {
                                 pulse = map_range(throttle,
@@ -186,7 +186,7 @@ abstract class VehicleService {
         // set steering
         if (driveMode == "user") {
             delayThread.schedule({
-                commands.put([direction:direction, duration:duration])
+                commands.put([direction:direction, duration:duration, angle:angle])
             } as Runnable, delay, TimeUnit.MILLISECONDS)
         } else if (driveMode == "pilot") {
             //stop all remote control and reset motors?
