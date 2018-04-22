@@ -40,6 +40,7 @@ abstract class VehicleService {
     Process process // this is the process python is running in pilot mode
     ArrayBlockingQueue commands
     def running = true
+    def delay = 0
     Thread delayThread
 
     @PostConstruct
