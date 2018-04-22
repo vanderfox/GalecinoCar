@@ -53,12 +53,14 @@ abstract class VehicleService {
             System.out.print("inside thread")
             while (running) {
                 def recent = []
+
                 commands.drainTo(recent)
                 System.out.print("recent="+recent)
 
                 if (recent.size()) {
                     println recent.size()
                     def command = recent[-1]
+                    float throttle = command.throttle
                     println command.direction
                     def duration = command.duration
                     println duration
@@ -186,7 +188,7 @@ abstract class VehicleService {
         // set steering
         if (driveMode == "user") {
             delayThread.schedule({
-                commands.put([direction:direction, duration:duration, angle:angle])
+                commands.put([direction:direction, duration:duration, angle:angle, throttle:throttle])
             } as Runnable, delay, TimeUnit.MILLISECONDS)
         } else if (driveMode == "pilot") {
             //stop all remote control and reset motors?
