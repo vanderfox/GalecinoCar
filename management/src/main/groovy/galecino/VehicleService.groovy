@@ -250,7 +250,7 @@ abstract class VehicleService {
         float Y_range = Y_max - Y_min
         float XY_ratio = X_range / Y_range
 
-        int y = ((x - X_min) / XY_ratio + Y_min) // 1
+        int y = (((x - X_min) / XY_ratio + Y_min)).toInteger() // 1
 
         return y
     }
