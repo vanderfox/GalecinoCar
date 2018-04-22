@@ -242,7 +242,7 @@ abstract class VehicleService {
 
     }
 
-    private float map_range(float x, int X_min, int X_max, int Y_min, int Y_max) {
+    float map_range(float x, int X_min, int X_max, int Y_min, int Y_max) {
     //    '''
     //Linear mapping between two ranges of values
     //'''
