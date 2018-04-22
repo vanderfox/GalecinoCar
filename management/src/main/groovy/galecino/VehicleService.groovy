@@ -16,6 +16,7 @@ import javax.imageio.ImageIO
 import java.awt.image.BufferedImage
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
 @Service(Vehicle)
@@ -42,7 +43,7 @@ abstract class VehicleService {
     ArrayBlockingQueue commands
     def running = true
     def delay = 0
-    Thread delayThread
+    ScheduledThreadPoolExecutor delayThread
 
     @PostConstruct
     void init() {
