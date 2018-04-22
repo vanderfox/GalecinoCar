@@ -36,6 +36,7 @@ import java.awt.image.BufferedImage
 import io.micronaut.http.MediaType
 
 import java.nio.ByteBuffer
+import java.util.concurrent.ArrayBlockingQueue
 
 /**
  * @author Graeme Rocher
@@ -51,15 +52,20 @@ class VehicleController {
     @Value('${galecino.servo.trim:0.0}')
     protected float configTrim
 
+
     List<Vehicle> index() {
         vehicleService.list()
         vehicleService.pwmTest()
     }
 
+
+
     @Transactional
     @PostConstruct
     void setup() {
         vehicleService.save 'VanderfoxCar'
+
+
     }
 
 
@@ -146,7 +152,8 @@ class VehicleController {
     HttpResponse<String> drive(float angle, float throttle, String drive_mode = "user", Boolean recording = false) {
         //vehicleService.steer(angle)
         System.out.println("drive called")
-        vehicleService.drive(angle,throttle)
+        vehicleService.driveScheduled(angle,throttle)
+        //vehicleService.drive(angle,throttle)
         return HttpResponse.ok("angle:${angle} throttle:${throttle}")
     }
 }

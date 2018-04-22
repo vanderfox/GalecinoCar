@@ -11,8 +11,11 @@ import com.robo4j.hw.rpi.pwm.PWMServo
 import grails.gorm.services.Service
 import io.micronaut.context.annotation.Value
 
+import javax.annotation.PostConstruct
 import javax.imageio.ImageIO
 import java.awt.image.BufferedImage
+import java.util.concurrent.ArrayBlockingQueue
+import java.util.concurrent.TimeUnit
 
 @Service(Vehicle)
 abstract class VehicleService {
@@ -35,7 +38,66 @@ abstract class VehicleService {
 
     RPiCamera piCamera
     Process process // this is the process python is running in pilot mode
+    ArrayBlockingQueue commands
+    def running = true
+    Thread delayThread
 
+    @PostConstruct
+    void init() {
+        commands = new ArrayBlockingQueue(100)
+        def th = Thread.start {
+            while (running) {
+                def recent = []
+                commands.drainTo(recent)
+
+                if (recent.size()) {
+                    println recent.size()
+                    def command = recent[-1]
+                    println command.direction
+                    def duration = command.duration
+                    println duration
+                    switch (command.direction) {
+                        case 'forward':
+                            if (process && process?.alive) {
+                                process.destroyForcibly()
+                            }
+                            steer(angle)
+                            int pulse = 0
+                            if (throttle > 0) {
+                                pulse = map_range(throttle,
+                                        0, 1,
+                                        MIN_THROTTLE_FORWORD, MAX_THROTTLE_FORWORD)
+                                System.out.println("fwd Pulse=${pulse} throttle:"+throttle)
+                            } else {
+                                if (throttle < 0) {
+                                    pulse = map_range(throttle,
+                                            -1, 0,
+                                            MAX_THROTTLE_BACKWARD, MIN_THROTTLE_BACKWARD)
+                                    System.out.println("backwd  Pulse=${pulse} throttle:"+throttle)
+                                }
+                                if (throttle == 0) {
+                                    System.out.println("stop")
+                                    stop(50)
+                                    return
+                                }
+                            }
+                            // set throttle
+                            forward(50, 0, pulse)
+                            break
+                        case 'stop':
+                            stop(50)
+                            break
+                    }
+                    if (commands.size() == 0) {
+                        stop(50)
+                    }
+                }
+                if (commands.size() == 0) {
+                    Thread.sleep(100)
+                }
+            }
+        }
+    }
     void pwmTest() {
         System.out.println("Creating device...");
         PWMPCA9685Device device = new PWMPCA9685Device();
@@ -110,6 +172,26 @@ abstract class VehicleService {
         device.setPWMFrequency(frequency)
         PWMPCA9685Device.PWMChannel motor0 = device.getChannel(0)
         motor0.setPWM(on, off)
+    }
+
+    void driveScheduled(float angle, float throttle, String driveMode = "user", Boolean recording = false) {
+        String direction = "forward"
+        int duration = 0
+        // set steering
+        if (driveMode == "user") {
+            delayThread.schedule({
+                commands.put([direction:direction, duration:duration])
+            } as Runnable, delay, TimeUnit.MILLISECONDS)
+        } else if (driveMode == "pilot") {
+            //stop all remote control and reset motors?
+            if (!process || !process.alive) {
+                //stop all remote control and reset motors in case car is moving
+                stop()
+                Process process = "python galenciocar.py".execute()
+            }
+        }
+
+
     }
 
     void drive(float angle, float throttle, String driveMode = "user", Boolean recording = false) {
