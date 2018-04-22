@@ -50,9 +50,11 @@ abstract class VehicleService {
         delayThread = Executors.newScheduledThreadPool(1)
         commands = new ArrayBlockingQueue(100)
         def th = Thread.start {
+            System.out.print("inside thread")
             while (running) {
                 def recent = []
                 commands.drainTo(recent)
+                System.out.print("recent="+recent)
 
                 if (recent.size()) {
                     println recent.size()
