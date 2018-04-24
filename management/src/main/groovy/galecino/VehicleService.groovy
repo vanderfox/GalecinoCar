@@ -10,6 +10,8 @@ import com.robo4j.hw.rpi.i2c.pwm.PWMPCA9685Device
 import com.robo4j.hw.rpi.pwm.PWMServo
 import grails.gorm.services.Service
 import io.micronaut.context.annotation.Value
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import javax.annotation.PostConstruct
 import javax.imageio.ImageIO
@@ -45,6 +47,7 @@ abstract class VehicleService {
     def delay = 50
     Thread th
     ScheduledThreadPoolExecutor delayThread
+    protected static final Logger LOG = LoggerFactory.getLogger(VehicleService.class);
 
     @PostConstruct
     void init() {
@@ -56,20 +59,20 @@ abstract class VehicleService {
     private void startDriveThread() {
         th = Thread.start {
             try {
-                System.out.print("inside thread")
+                LOG.info("inside thread")
                 while (running) {
                     def recent = []
 
                     commands.drainTo(recent)
-                    System.out.print("recent="+recent)
+                    LOG.info("recent="+recent)
 
                     if (recent.size()) {
-                        println recent.size()
+                        LOG.info recent.size()
                         def command = recent[-1]
                         float throttle = command.throttle
-                        println command.direction
+                        LOG.info command.direction
                         def duration = command.duration
-                        println duration
+                        LOG.info duration
                         switch (command.direction) {
                             case 'forward':
                                 if (process && process?.alive) {
@@ -81,16 +84,16 @@ abstract class VehicleService {
                                     pulse = map_range(throttle,
                                             0, 1,
                                             MIN_THROTTLE_FORWORD, MAX_THROTTLE_FORWORD)
-                                    System.out.println("fwd Pulse=${pulse} throttle:"+throttle)
+                                    LOG.info("fwd Pulse=${pulse} throttle:"+throttle)
                                 } else {
                                     if (throttle < 0) {
                                         pulse = map_range(throttle,
                                                 -1, 0,
                                                 MAX_THROTTLE_BACKWARD, MIN_THROTTLE_BACKWARD)
-                                        System.out.println("backwd  Pulse=${pulse} throttle:"+throttle)
+                                        LOG.info("backwd  Pulse=${pulse} throttle:"+throttle)
                                     }
                                     if (throttle == 0) {
-                                        System.out.println("stop")
+                                       LOG.info("stop")
                                         stop(50)
                                         return
                                     }
@@ -111,8 +114,7 @@ abstract class VehicleService {
                     }
                 }
             } catch (Exception e) {
-                println("drive thread crashed:"+e.message)
-                e.printStackTrace()
+                LOG.error("drive thread crashed:"+e.message,e)
             }
         }
     }
@@ -196,15 +198,15 @@ abstract class VehicleService {
         String direction = "forward"
         int duration = 0
         // set steering
-        println("drivemode="+driveMode)
-        println("drivethread="+th+" status:"+th.state+" isalive:"+th.isAlive())
+        LOG.info("drivemode="+driveMode)
+        LOG.info("drivethread="+th+" status:"+th.state+" isalive:"+th.isAlive())
         if (driveMode == "user") {
-            println("delayThread="+delayThread)
+            LOG.info("delayThread="+delayThread)
             if (th && th.state == Thread.State.TERMINATED) {
                 startDriveThread()
             }
             delayThread.schedule({
-                println("command queued")
+                LOG.info("command queued")
                 commands.put([direction:direction, duration:duration, angle:angle, throttle:throttle])
             } as Runnable, delay, TimeUnit.MILLISECONDS)
         } else if (driveMode == "pilot") {
