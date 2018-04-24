@@ -42,14 +42,15 @@ abstract class VehicleService {
     Process process // this is the process python is running in pilot mode
     ArrayBlockingQueue commands
     def running = true
-    def delay = 0
+    def delay = 50
+    Thread th
     ScheduledThreadPoolExecutor delayThread
 
     @PostConstruct
     void init() {
         delayThread = Executors.newScheduledThreadPool(1)
         commands = new ArrayBlockingQueue(100)
-        def th = Thread.start {
+        th = Thread.start {
             System.out.print("inside thread")
             while (running) {
                 def recent = []
@@ -186,8 +187,12 @@ abstract class VehicleService {
         String direction = "forward"
         int duration = 0
         // set steering
+        println("drivemode="+driveMode)
+        println("drivethread="+th+" status:"+th.state+" isalive:"+th.isAlive())
         if (driveMode == "user") {
+            println("delayThread="+delayThread)
             delayThread.schedule({
+                println("command queued")
                 commands.put([direction:direction, duration:duration, angle:angle, throttle:throttle])
             } as Runnable, delay, TimeUnit.MILLISECONDS)
         } else if (driveMode == "pilot") {
