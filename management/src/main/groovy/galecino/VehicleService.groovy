@@ -67,7 +67,7 @@ abstract class VehicleService {
                     LOG.info("recent="+recent)
 
                     if (recent.size()) {
-                        LOG.info recent.size()
+                        LOG.info recent.size().toString()
                         def command = recent[-1]
                         float throttle = command.throttle
                         LOG.info command.direction
