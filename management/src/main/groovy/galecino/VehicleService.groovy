@@ -72,7 +72,7 @@ abstract class VehicleService {
                         float throttle = command.throttle
                         LOG.info command.direction
                         def duration = command.duration
-                        LOG.info new String(duration)
+
                         switch (command.direction) {
                             case 'forward':
                                 if (process && process?.alive) {
