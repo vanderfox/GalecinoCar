@@ -50,60 +50,69 @@ abstract class VehicleService {
     void init() {
         delayThread = Executors.newScheduledThreadPool(1)
         commands = new ArrayBlockingQueue(100)
+        startDriveThread()
+    }
+
+    private void startDriveThread() {
         th = Thread.start {
-            System.out.print("inside thread")
-            while (running) {
-                def recent = []
+            try {
+                System.out.print("inside thread")
+                while (running) {
+                    def recent = []
 
-                commands.drainTo(recent)
-                System.out.print("recent="+recent)
+                    commands.drainTo(recent)
+                    System.out.print("recent="+recent)
 
-                if (recent.size()) {
-                    println recent.size()
-                    def command = recent[-1]
-                    float throttle = command.throttle
-                    println command.direction
-                    def duration = command.duration
-                    println duration
-                    switch (command.direction) {
-                        case 'forward':
-                            if (process && process?.alive) {
-                                process.destroyForcibly()
-                            }
-                            steer(command.angle)
-                            int pulse = 0
-                            if (throttle > 0) {
-                                pulse = map_range(throttle,
-                                        0, 1,
-                                        MIN_THROTTLE_FORWORD, MAX_THROTTLE_FORWORD)
-                                System.out.println("fwd Pulse=${pulse} throttle:"+throttle)
-                            } else {
-                                if (throttle < 0) {
+                    if (recent.size()) {
+                        println recent.size()
+                        def command = recent[-1]
+                        float throttle = command.throttle
+                        println command.direction
+                        def duration = command.duration
+                        println duration
+                        switch (command.direction) {
+                            case 'forward':
+                                if (process && process?.alive) {
+                                    process.destroyForcibly()
+                                }
+                                steer(command.angle)
+                                int pulse = 0
+                                if (throttle > 0) {
                                     pulse = map_range(throttle,
-                                            -1, 0,
-                                            MAX_THROTTLE_BACKWARD, MIN_THROTTLE_BACKWARD)
-                                    System.out.println("backwd  Pulse=${pulse} throttle:"+throttle)
+                                            0, 1,
+                                            MIN_THROTTLE_FORWORD, MAX_THROTTLE_FORWORD)
+                                    System.out.println("fwd Pulse=${pulse} throttle:"+throttle)
+                                } else {
+                                    if (throttle < 0) {
+                                        pulse = map_range(throttle,
+                                                -1, 0,
+                                                MAX_THROTTLE_BACKWARD, MIN_THROTTLE_BACKWARD)
+                                        System.out.println("backwd  Pulse=${pulse} throttle:"+throttle)
+                                    }
+                                    if (throttle == 0) {
+                                        System.out.println("stop")
+                                        stop(50)
+                                        return
+                                    }
                                 }
-                                if (throttle == 0) {
-                                    System.out.println("stop")
-                                    stop(50)
-                                    return
-                                }
-                            }
-                            // set throttle
-                            forward(50, 0, pulse)
-                            break
-                        case 'stop':
+                                // set throttle
+                                forward(50, 0, pulse)
+                                break
+                            case 'stop':
+                                stop(50)
+                                break
+                        }
+                        if (commands.size() == 0) {
                             stop(50)
-                            break
+                        }
                     }
                     if (commands.size() == 0) {
-                        stop(50)
+                        Thread.sleep(100)
                     }
                 }
-                if (commands.size() == 0) {
-                    Thread.sleep(100)
-                }
+            } catch (Exception e) {
+                println("drive thread crashed:"+e.message)
+                e.printStackTrace()
             }
         }
     }
@@ -191,6 +200,9 @@ abstract class VehicleService {
         println("drivethread="+th+" status:"+th.state+" isalive:"+th.isAlive())
         if (driveMode == "user") {
             println("delayThread="+delayThread)
+            if (th && th.state == Thread.State.TERMINATED) {
+                startDriveThread()
+            }
             delayThread.schedule({
                 println("command queued")
                 commands.put([direction:direction, duration:duration, angle:angle, throttle:throttle])
