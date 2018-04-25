@@ -25,17 +25,19 @@ import java.util.concurrent.TimeUnit
 abstract class VehicleService {
 
     private static final int SERVO_FREQUENCY = 50
-    private static final int MOTOR_BACKWARD = 360
+    private static final int MOTOR_BACKWARD = 310
     private static final int MOTOR_FORWARD = 400
-    private static final int MOTOR_STOPPED = 310
+    private static final int MOTOR_STOPPED = 360
     private static final int STEERING_LEFT = 420
-    private static final int STEERING_RIGHT = 310
+    private static final int STEERING_RIGHT = 360
     private static final int MAX_THROTTLE_FORWORD = 600
     private static final int MIN_THROTTLE_FORWORD = 400 
     private static final int MAX_THROTTLE_BACKWARD = 1
     private static final int MIN_THROTTLE_BACKWARD = 310 
     @Value('${galecino.servo.trim:0.0}')
     protected float configTrim
+    @Value('${galecino.pwmFrequency:50}')
+    protected int pwmFrequency
 
     abstract List<Vehicle> list()
     abstract Vehicle save(String name)
@@ -94,19 +96,19 @@ abstract class VehicleService {
                                     }
                                     if (throttle == 0) {
                                        LOG.info("stop")
-                                        stop(50)
+                                        stop(pwmFrequency)
                                         return
                                     }
                                 }
                                 // set throttle
-                                forward(50, 0, pulse)
+                                forward(pwmFrequency, 0, pulse)
                                 break
                             case 'stop':
-                                stop(50)
+                                stop(pwmFrequency)
                                 break
                         }
                         if (commands.size() == 0) {
-                            stop(50)
+                            stop(pwmFrequency)
                         }
                     }
                     if (commands.size() == 0) {
@@ -155,7 +157,7 @@ abstract class VehicleService {
         }
     }
 
-    void forward(int frequency = SERVO_FREQUENCY, int on = 0, int off = MOTOR_FORWARD) {
+    void forward(int frequency = pwmFrequency, int on = 0, int off = MOTOR_FORWARD) {
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(frequency)
         PWMPCA9685Device.PWMChannel motor0 = device.getChannel(0)
@@ -175,7 +177,7 @@ abstract class VehicleService {
     void steer(float angle, float trim = 0.0) {
         // seems like 360 right 520 left
         PWMPCA9685Device device = new PWMPCA9685Device()
-        device.setPWMFrequency(50)
+        device.setPWMFrequency(pwmFrequency)
         Servo servo0 = new PCA9685Servo(device.getChannel(1))
         servo0.setInput(angle)
         System.out.println("configTrim in service=${configTrim}")
@@ -243,12 +245,12 @@ abstract class VehicleService {
                 }
                 if (throttle == 0) {
                     System.out.println("stop")
-                    stop(50)
+                    stop(pwmFrequency)
                     return
                 }
             }
             // set throttle
-            forward(50, 0, pulse)
+            forward(pwmFrequency, 0, pulse)
         } else if (driveMode == "pilot") {
             //stop all remote control and reset motors?
             if (!process || !process.alive) {

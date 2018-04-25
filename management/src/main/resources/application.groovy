@@ -11,3 +11,4 @@ hibernate {
 router.static.resources.enabled = true
 router.static.resources.mapping = "/static/**"
 router.static.resources.paths = "classpath:static"
+galecino.pwmFrequency = 20
