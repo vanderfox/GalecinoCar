@@ -24,16 +24,17 @@ import java.util.concurrent.TimeUnit
 @Service(Vehicle)
 abstract class VehicleService {
 
-    private static final int SERVO_FREQUENCY = 50
-    private static final int MOTOR_BACKWARD = 310
-    private static final int MOTOR_FORWARD = 400
-    private static final int MOTOR_STOPPED = 360
+    private static final int SERVO_FREQUENCY = 20
+    private static final int MOTOR_BACKWARD = 674
+    private static final int MOTOR_FORWARD = 755
+    private static final int MOTOR_STOPPED = 700
     private static final int STEERING_LEFT = 420
+    private static final int STEERING_STRAIGHT_ANGLE = 44
     private static final int STEERING_RIGHT = 360
-    private static final int MAX_THROTTLE_FORWORD = 600
-    private static final int MIN_THROTTLE_FORWORD = 400 
-    private static final int MAX_THROTTLE_BACKWARD = 1
-    private static final int MIN_THROTTLE_BACKWARD = 310 
+    private static final int MAX_THROTTLE_FORWORD = 3500
+    private static final int MIN_THROTTLE_FORWORD = 755
+    private static final int MAX_THROTTLE_BACKWARD = 2
+    private static final int MIN_THROTTLE_BACKWARD = 674
     @Value('${galecino.servo.trim:0.0}')
     protected float configTrim
     @Value('${galecino.pwmFrequency:50}')
@@ -179,13 +180,14 @@ abstract class VehicleService {
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(pwmFrequency)
         Servo servo0 = new PCA9685Servo(device.getChannel(1))
-        servo0.setInput(angle)
+        System.out.println("steer angle non corrected:${angle} trim:${trim}")
+        servo0.setInput(STEERING_STRAIGHT_ANGLE+angle)
         System.out.println("configTrim in service=${configTrim}")
         if (trim == 0) {
            trim = configTrim
         }
         servo0.setTrim(trim)
-        System.out.println("steer angle:${angle} trim:${trim}")
+        System.out.println("corrected steer angle:${angle} trim:${trim}")
 
     }
 
