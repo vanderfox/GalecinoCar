@@ -29,7 +29,7 @@ abstract class VehicleService {
     private static final int MOTOR_FORWARD = 755
     private static final int MOTOR_STOPPED = 700
     private static final int STEERING_LEFT = 420
-    private static final int STEERING_STRAIGHT_ANGLE = 44
+    private static final float STEERING_STRAIGHT_ANGLE = 44.0
     private static final int STEERING_RIGHT = 360
     private static final int MAX_THROTTLE_FORWORD = 3500
     private static final int MIN_THROTTLE_FORWORD = 755
