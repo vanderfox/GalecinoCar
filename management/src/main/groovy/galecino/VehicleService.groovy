@@ -166,7 +166,7 @@ abstract class VehicleService {
 
     }
 
-    void backward(int frequency = SERVO_FREQUENCY, int on = 0, int off = MOTOR_BACKWARDD) {
+    void backward(int frequency = pwmFrequency, int on = 0, int off = MOTOR_BACKWARDD) {
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(frequency)
         PWMPCA9685Device.PWMChannel motor0 = device.getChannel(0)
