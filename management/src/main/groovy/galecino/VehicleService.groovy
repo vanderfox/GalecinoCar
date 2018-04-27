@@ -37,7 +37,7 @@ abstract class VehicleService {
     private static final int MIN_THROTTLE_BACKWARD = 674
     @Value('${galecino.servo.trim:0.0}')
     protected float configTrim
-    @Value('${galecino.pwmFrequency:50}')
+    @Value('${galecino.pwmFrequency:20}')
     protected int pwmFrequency
 
     abstract List<Vehicle> list()
