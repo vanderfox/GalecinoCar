@@ -190,7 +190,7 @@ abstract class VehicleService {
         device.setPWMFrequency(pwmFrequency)
         Servo servo0 = new PCA9685Servo(device.getChannel(1))
         System.out.println("steer angle non corrected:${angle} trim:${trim}")
-        servo0.setInput(STEERING_STRAIGHT_ANGLE+angle)
+        servo0.setInput((STEERING_STRAIGHT_ANGLE+angle).toFloat())
         System.out.println("configTrim in service=${configTrim}")
         if (trim == 0) {
            trim = configTrim
