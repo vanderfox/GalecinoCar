@@ -32,7 +32,7 @@ abstract class VehicleService {
     private static final float STEERING_STRAIGHT_ANGLE = 44.0
     private static final int STEERING_RIGHT = 360
     private static final int MAX_THROTTLE_FORWORD = 3500
-    private static final int MIN_THROTTLE_FORWORD = 755
+    private static final int MIN_THROTTLE_FORWORD = 804
     private static final int MAX_THROTTLE_BACKWARD = 2
     private static final int MIN_THROTTLE_BACKWARD = 674
     @Value('${galecino.servo.trim:0.0}')
