@@ -56,11 +56,12 @@ abstract class VehicleService {
     void init() {
         delayThread = Executors.newScheduledThreadPool(1)
         commands = new ArrayBlockingQueue(100)
+        initThrottle() // make sure motor is ready
         startDriveThread()
     }
 
     private void startDriveThread() {
-        initThrottle() // make sure motor is ready
+
         th = Thread.start {
             try {
                 LOG.info("inside thread")
@@ -163,7 +164,7 @@ abstract class VehicleService {
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(frequency)
         PWMPCA9685Device.PWMChannel motor0 = device.getChannel(0)
-        System.out.println("frequency:"+frequency+" on:"+on+" off:"+off)
+        LOG.info("fwd frequency:"+frequency+" on:"+on+" off:"+off)
         motor0.setPWM(on, off)
 
     }
@@ -171,7 +172,7 @@ abstract class VehicleService {
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(frequency)
         PWMPCA9685Device.PWMChannel motor0 = device.getChannel(0)
-        System.out.println("frequency:"+frequency+" on:"+on+" off:"+off)
+        LOG.info("init motor frequency:"+frequency+" on:"+on+" off:"+off)
         motor0.setPWM(on, off)
 
     }
@@ -180,6 +181,7 @@ abstract class VehicleService {
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(frequency)
         PWMPCA9685Device.PWMChannel motor0 = device.getChannel(0)
+        LOG.info("backward frequency:"+frequency+" on:"+on+" off:"+off)
         motor0.setPWM(on, off)
     }
 
