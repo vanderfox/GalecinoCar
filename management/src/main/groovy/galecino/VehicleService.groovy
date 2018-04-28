@@ -143,13 +143,15 @@ abstract class VehicleService {
         System.out.println("Running perpetual loop...");
         while (true) {
             servo0.setInput(-1);
+            Thread.sleep(500);
+            servo0.setInput(1);
             //servo1.setInput(-1);
-            motor0.setPWM(0, MOTOR_FORWARD);
+            motor0.setPWM(0, 800);
             //motor1.setPWM(0, MOTOR_FORWARD);
             Thread.sleep(500);
             servo0.setInput(1);;
             //servo1.setInput(1);;
-            motor0.setPWM(0, MOTOR_BACKWARD);
+            motor0.setPWM(0, 200);
             //motor1.setPWM(0, MOTOR_BACKWARD);
             Thread.sleep(500);
             servo0.setInput(0);
