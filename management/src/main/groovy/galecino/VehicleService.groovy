@@ -224,10 +224,10 @@ abstract class VehicleService {
         int duration = 0
         // set steering
         LOG.info("drivemode="+driveMode)
-        LOG.info("drivethread="+th+" status:"+th.state+" isalive:"+th.isAlive())
+        LOG.info("drivethread="+th+" status:"+th?.state+" isalive:"+th?.isAlive())
         if (driveMode == "user") {
             LOG.info("delayThread="+delayThread)
-            if (th && th.state == Thread.State.TERMINATED) {
+            if ((th && th.state == Thread.State.TERMINATED) || !th) {
                 startDriveThread()
             }
             delayThread.schedule({
