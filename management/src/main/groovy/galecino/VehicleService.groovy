@@ -24,17 +24,18 @@ import java.util.concurrent.TimeUnit
 @Service(Vehicle)
 abstract class VehicleService {
 
+    //these vales seem double the donkeycar pwm vals
     private static final int SERVO_FREQUENCY = 20
-    private static final int MOTOR_BACKWARD = 674
-    private static final int MOTOR_FORWARD = 755
-    private static final int MOTOR_STOPPED = 700
+    private static final int MOTOR_BACKWARD = 730
+    private static final int MOTOR_FORWARD = 800
+    private static final int MOTOR_STOPPED = 760
     private static final int STEERING_LEFT = 420
     private static final float STEERING_STRAIGHT_ANGLE = 44.0
     private static final int STEERING_RIGHT = 360
-    private static final int MAX_THROTTLE_FORWORD = 3500
-    private static final int MIN_THROTTLE_FORWORD = 804
-    private static final int MAX_THROTTLE_BACKWARD = 2
-    private static final int MIN_THROTTLE_BACKWARD = 770
+    private static final int MAX_THROTTLE_FORWORD = 1000
+    private static final int MIN_THROTTLE_FORWORD = 800
+    private static final int MAX_THROTTLE_BACKWARD = 500
+    private static final int MIN_THROTTLE_BACKWARD = 730
     @Value('${galecino.servo.trim:0.0}')
     protected float configTrim
     @Value('${galecino.pwmFrequency:20}')
@@ -167,10 +168,17 @@ abstract class VehicleService {
         device.setPWMFrequency(frequency)
         PWMPCA9685Device.PWMChannel motor0 = device.getChannel(0)
         LOG.info("fwd frequency:"+frequency+" on:"+on+" off:"+off)
-        motor0.setPWM(on, off)
+        if (pwmFrequency < MOTOR_STOPPED) {
+            //for backward we have to do a dance
+            motor0.setPWM(on,MOTOR_BACKWARD)
+            motor0.setPWM(on,MOTOR_STOPPED)
+            motor0.setPWM(on,pwmFrequency)
+        } else {
+            motor0.setPWM(on, off)
+        }
 
     }
-    void initThrottle(int frequency = pwmFrequency, int on = 0, int off = MOTOR_FORWARD) {
+    void initThrottle(int frequency = pwmFrequency, int on = 0, int off = MOTOR_STOPPED) {
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(frequency)
         PWMPCA9685Device.PWMChannel motor0 = device.getChannel(0)
