@@ -58,7 +58,10 @@ abstract class VehicleService {
         LOG.info("Init thread started")
         delayThread = Executors.newScheduledThreadPool(1)
         commands = new ArrayBlockingQueue(100)
-        initThrottle() // make sure motor is ready
+        initThrottle(20,0,MOTOR_FORWARD) // make sure motor is ready
+        Thread.sleep(100)
+        initThrottle(20,0,MOTOR_STOPPED)
+        hread.sleep(100)
         startDriveThread()
         LOG.info("Init thread finished")
     }
@@ -177,7 +180,9 @@ abstract class VehicleService {
         if (pwmFrequency < MOTOR_STOPPED) {
             //for backward we have to do a dance
             motor0.setPWM(on,MOTOR_BACKWARD)
+            Thread.sleep(100)
             motor0.setPWM(on,MOTOR_STOPPED)
+            Thread.sleep(100)
             motor0.setPWM(on,pwmFrequency)
         } else {
             motor0.setPWM(on, off)
