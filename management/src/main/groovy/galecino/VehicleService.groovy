@@ -68,6 +68,10 @@ abstract class VehicleService {
         th = Thread.start {
             try {
                 LOG.info("inside thread")
+                if (!commands && !delayThread) {
+                    //this is a workaround because @PostConstrct seems to have stopped working
+                    init()
+                }
                 while (running) {
                     def recent = []
 
