@@ -177,6 +177,7 @@ abstract class VehicleService {
         device.setPWMFrequency(frequency)
         PWMPCA9685Device.PWMChannel motor0 = device.getChannel(0)
         LOG.info("fwd frequency:"+frequency+" on:"+on+" off:"+off)
+/**
         if (pwmFrequency < MOTOR_STOPPED) {
             //for backward we have to do a dance
             motor0.setPWM(on,MOTOR_BACKWARD)
@@ -186,7 +187,9 @@ abstract class VehicleService {
             motor0.setPWM(on,pwmFrequency)
         } else {
             motor0.setPWM(on, off)
-        }
+        }**/
+        motor0.setPWM(on,off)
+        Thread.sleep(1000)
 
     }
     void initThrottle(int frequency = pwmFrequency, int on = 0, int off = MOTOR_STOPPED) {
@@ -213,7 +216,7 @@ abstract class VehicleService {
         device.setPWMFrequency(pwmFrequency)
         Servo servo0 = new PCA9685Servo(device.getChannel(1))
         System.out.println("steer angle non corrected:${angle} trim:${trim}")
-        servo0.setInput((STEERING_STRAIGHT_ANGLE+angle).toFloat())
+        servo0.setInput((angle).toFloat())
         System.out.println("configTrim in service=${configTrim}")
         if (trim == 0) {
            trim = configTrim

@@ -508,8 +508,8 @@ var driveHandler = new function() {
       var controlDirection = (Math.sign(initialGamma) * -1)
 
       //max steering angle at device 35º tilt
-      var fullLeft = -35.0;
-      var fullRight = 35.0;
+      var fullLeft = 22.0;
+      var fullRight = -1.0;
 
       //handle beta 90 to 180 discontinuous transition at gamma 90
       if (beta > 90) {
