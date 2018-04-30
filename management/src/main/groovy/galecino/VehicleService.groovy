@@ -54,7 +54,7 @@ abstract class VehicleService {
     protected static final Logger LOG = LoggerFactory.getLogger(VehicleService.class);
 
     @PostConstruct
-    void init() {
+    synchronized void init() {
         LOG.info("Init thread started")
         delayThread = Executors.newScheduledThreadPool(1)
         commands = new ArrayBlockingQueue(100)
