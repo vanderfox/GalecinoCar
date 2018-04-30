@@ -157,7 +157,7 @@ class VehicleController {
     HttpResponse<String> drive(float angle, float throttle, String drive_mode = "user", Boolean recording = false) {
         //vehicleService.steer(angle)
         System.out.println("drive called")
-        vehicleService.driveScheduled(angle,throttle)
+        vehicleService.driveScheduled(angle,throttle, drive_mode, recording)
         //vehicleService.drive(angle,throttle)
         return HttpResponse.ok("angle:${angle} throttle:${throttle}")
     }
