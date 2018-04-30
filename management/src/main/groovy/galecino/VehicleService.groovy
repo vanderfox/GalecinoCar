@@ -61,7 +61,7 @@ abstract class VehicleService {
         initThrottle(20,0,MOTOR_FORWARD) // make sure motor is ready
         Thread.sleep(100)
         initThrottle(20,0,MOTOR_STOPPED)
-        hread.sleep(100)
+        Thread.sleep(100)
         startDriveThread()
         LOG.info("Init thread finished")
     }
