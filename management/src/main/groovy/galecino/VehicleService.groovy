@@ -60,7 +60,7 @@ abstract class VehicleService {
         commands = new ArrayBlockingQueue(100)
         initThrottle() // make sure motor is ready
         startDriveThread()
-        LOG.infof("Init thread finished")
+        LOG.info("Init thread finished")
     }
 
     private void startDriveThread() {
