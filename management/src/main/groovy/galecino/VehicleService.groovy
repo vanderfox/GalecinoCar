@@ -54,7 +54,7 @@ abstract class VehicleService {
     protected static final Logger LOG = LoggerFactory.getLogger(VehicleService.class);
 
     @PostConstruct
-    synchronized void init() {
+    void init() {
         LOG.info("Init thread started")
         delayThread = Executors.newScheduledThreadPool(1)
         commands = new ArrayBlockingQueue(100)
@@ -68,10 +68,10 @@ abstract class VehicleService {
         th = Thread.start {
             try {
                 LOG.info("inside thread")
-                if (!commands && !delayThread) {
+                /*if (!commands && !delayThread) {
                     //this is a workaround because @PostConstrct seems to have stopped working
                     init()
-                }
+                }*/
                 while (running) {
                     def recent = []
 

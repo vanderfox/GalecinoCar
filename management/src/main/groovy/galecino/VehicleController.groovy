@@ -27,6 +27,8 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.reactivestreams.Publisher
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import javax.annotation.PostConstruct
 import javax.imageio.ImageIO
@@ -46,6 +48,8 @@ import java.util.concurrent.ArrayBlockingQueue
 @Singleton
 class VehicleController {
 
+    protected static final Logger LOG = LoggerFactory.getLogger(VehicleController.class);
+
     @Inject
     VehicleService vehicleService
 
@@ -63,9 +67,10 @@ class VehicleController {
     @Transactional
     @PostConstruct
     void setup() {
-        vehicleService.save 'VanderfoxCar'
-
-
+        //vehicleService.save 'VanderfoxCar'
+        LOG.info("called setup from VehicleController")
+        vehicleService.init()
+        LOG.info("finished setup from VehicleController")
     }
 
 
