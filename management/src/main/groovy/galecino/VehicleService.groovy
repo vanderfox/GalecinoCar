@@ -248,12 +248,12 @@ abstract class VehicleService {
                 LOG.info("command queued")
                 commands.put([direction:direction, duration:duration, angle:angle, throttle:throttle])
             } as Runnable, delay, TimeUnit.MILLISECONDS)
-        } else if (driveMode == "pilot") {
+        } else if (driveMode == "local") {
             //stop all remote control and reset motors?
             if (!process || !process.alive) {
                 //stop all remote control and reset motors in case car is moving
                 stop()
-                Process process = "python galenciocar.py".execute()
+                Process process = "python /home/pi/d2/galenciocar.py --model /home/pi/d2/models/smartpilot".execute()
             }
         }
 
