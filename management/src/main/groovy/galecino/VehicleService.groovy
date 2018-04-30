@@ -55,10 +55,12 @@ abstract class VehicleService {
 
     @PostConstruct
     void init() {
+        LOG.info("Init thread started")
         delayThread = Executors.newScheduledThreadPool(1)
         commands = new ArrayBlockingQueue(100)
         initThrottle() // make sure motor is ready
         startDriveThread()
+        LOG.infof("Init thread finished")
     }
 
     private void startDriveThread() {
@@ -170,8 +172,8 @@ abstract class VehicleService {
         LOG.info("fwd frequency:"+frequency+" on:"+on+" off:"+off)
         if (pwmFrequency < MOTOR_STOPPED) {
             //for backward we have to do a dance
-            //motor0.setPWM(on,MOTOR_BACKWARD)
-            //motor0.setPWM(on,MOTOR_STOPPED)
+            motor0.setPWM(on,MOTOR_BACKWARD)
+            motor0.setPWM(on,MOTOR_STOPPED)
             motor0.setPWM(on,pwmFrequency)
         } else {
             motor0.setPWM(on, off)
