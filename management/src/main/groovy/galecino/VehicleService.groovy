@@ -250,6 +250,9 @@ abstract class VehicleService {
             if ((th && th.state == Thread.State.TERMINATED) || !th) {
                 startDriveThread()
             }
+            if (delayThread && delayThread.terminated) {
+                init() // reset state
+            }
             delayThread.schedule({
                 LOG.info("command queued")
                 commands.put([direction:direction, duration:duration, angle:angle, throttle:throttle])
