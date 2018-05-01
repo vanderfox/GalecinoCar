@@ -52,6 +52,7 @@ abstract class VehicleService {
     Thread th
     ScheduledThreadPoolExecutor delayThread
     protected static final Logger LOG = LoggerFactory.getLogger(VehicleService.class);
+    String currentDriveMode = "user"
 
     @PostConstruct
     void init() {
@@ -235,6 +236,7 @@ abstract class VehicleService {
 
     void driveScheduled(float angle, float throttle, String driveMode = "user", Boolean recording = false) {
         String direction = "forward"
+        currentDriveMode = driveMode
         int duration = 0
         // set steering
         LOG.info("drivemode="+driveMode)
@@ -250,11 +252,10 @@ abstract class VehicleService {
             } as Runnable, delay, TimeUnit.MILLISECONDS)
         } else if (driveMode == "local") {
             //stop all remote control and reset motors?
-            if (!process || !process.alive) {
                 //stop all remote control and reset motors in case car is moving
                 stop()
                 Process process = "python /home/pi/d2/galenciocar.py --model /home/pi/d2/models/smartpilot".execute()
-            }
+
         }
 
 
@@ -315,37 +316,39 @@ abstract class VehicleService {
 
 
     byte[] takeStill() {
-        if (!piCamera) {
-            synchronized(this) {
-                long startTime = System.currentTimeMillis()
-                piCamera = new RPiCamera()
-                piCamera.setAWB(AWB.AUTO) 	    // Change Automatic White Balance setting to automatic
-                        .setTimeout(30)		    // Wait 1 second to take the image
-                        .setBrightness(60)
-                        .turnOffPreview()            // Turn on image preview
-                        .setEncoding(Encoding.JPG) //
-                long endTime = System.currentTimeMillis()
-                System.out.println("init camera took ${endTime-startTime}ms")
+        if (currentDriveMode == "user") {
+            if (!piCamera) {
+                synchronized (this) {
+                    long startTime = System.currentTimeMillis()
+                    piCamera = new RPiCamera()
+                    piCamera.setAWB(AWB.AUTO)        // Change Automatic White Balance setting to automatic
+                            .setTimeout(30)            // Wait 1 second to take the image
+                            .setBrightness(60)
+                            .turnOffPreview()            // Turn on image preview
+                            .setEncoding(Encoding.JPG) //
+                    long endTime = System.currentTimeMillis()
+                    System.out.println("init camera took ${endTime - startTime}ms")
+                }
             }
-        }
-        long startTime = System.currentTimeMillis()
+            long startTime = System.currentTimeMillis()
 
-        BufferedImage image = piCamera.takeBufferedStill(160,120)
-        long endTime = System.currentTimeMillis()
-        System.out.println("camera pic took ${endTime-startTime}ms")
-        startTime = System.currentTimeMillis()
-        ByteArrayOutputStream baos = new ByteArrayOutputStream()
-        if (!image) {
-          image = piCamera.takeBufferedStill(160,120)
-	}
-        if (image) {
-        ImageIO.write(image, "jpg", baos)
-        byte[] imageOut = baos.toByteArray()
-        endTime = System.currentTimeMillis()
-        System.out.println("pic jpg convert took ${endTime-startTime}ms")
-        imageOut
-        } else {
-          null
+            BufferedImage image = piCamera.takeBufferedStill(160, 120)
+            long endTime = System.currentTimeMillis()
+            System.out.println("camera pic took ${endTime - startTime}ms")
+            startTime = System.currentTimeMillis()
+            ByteArrayOutputStream baos = new ByteArrayOutputStream()
+            if (!image) {
+                image = piCamera.takeBufferedStill(160, 120)
+            }
+            if (image) {
+                ImageIO.write(image, "jpg", baos)
+                byte[] imageOut = baos.toByteArray()
+                endTime = System.currentTimeMillis()
+                System.out.println("pic jpg convert took ${endTime - startTime}ms")
+                imageOut
+            } else {
+                null
+            }
         }
 
     }
