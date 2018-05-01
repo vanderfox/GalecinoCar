@@ -269,6 +269,7 @@ abstract class VehicleService {
                 }
                 autopilotThread = "python /home/pi/d2/galenciocar.py --model /home/pi/d2/models/smartpilot".execute()
                 LOG.info("Autopilot started:"+autopilotThread.toString())
+                LOG.info(autopilotThread.errorStream)
         }
 
 
