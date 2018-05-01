@@ -243,6 +243,9 @@ abstract class VehicleService {
         LOG.info("drivemode="+driveMode)
         LOG.info("drivethread="+th+" status:"+th?.state+" isalive:"+th?.isAlive())
         if (driveMode == "user") {
+            if (autopilotThread) {
+                autopilotThread.destroyForcibly()
+            }
             LOG.info("delayThread="+delayThread)
             if ((th && th.state == Thread.State.TERMINATED) || !th) {
                 startDriveThread()
