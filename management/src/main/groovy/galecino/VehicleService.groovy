@@ -40,6 +40,7 @@ abstract class VehicleService {
     protected float configTrim
     @Value('${galecino.pwmFrequency:20}')
     protected int pwmFrequency
+    Process autopilotThread
 
     abstract List<Vehicle> list()
     abstract Vehicle save(String name)
@@ -254,8 +255,14 @@ abstract class VehicleService {
             //stop all remote control and reset motors?
                 //stop all remote control and reset motors in case car is moving
                 stop()
-                Process process = "python /home/pi/d2/galenciocar.py --model /home/pi/d2/models/smartpilot".execute()
-
+                if (th) {
+                    th.stop()
+                }
+                if (delayThread) {
+                    delayThread.shutdownNow()
+                }
+                autopilotThread = "python /home/pi/d2/galenciocar.py --model /home/pi/d2/models/smartpilot".execute()
+                LOG.info("Autopilot started:"+autopilotThread.toString())
         }
 
 
