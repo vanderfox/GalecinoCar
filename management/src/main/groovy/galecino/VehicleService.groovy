@@ -359,6 +359,10 @@ abstract class VehicleService {
             } else {
                 null
             }
+        } else {
+            if (autopilotThread) {
+                LOG.info("autopilot thread alive=${autopilotThread.alive} exitValue=${autopilotThread.exitValue()}")
+            }
         }
 
     }
