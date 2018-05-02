@@ -267,11 +267,14 @@ abstract class VehicleService {
                 if (delayThread) {
                     delayThread.shutdownNow()
                 }
-                autopilotThread = "python /home/pi/d2/galenciocar.py --model /home/pi/d2/models/smartpilot".execute()
+                def out = new StringBuffer()
+		def err = new StringBuffer()
+                autopilotThread = "python /home/pi/d2/galencino.py --model /home/pi/d2/models/smartpilot".execute()
+                autopilotThread.consumeProcessOutput( out, err )
+                autopilotThread.waitFor()
+if( out.size() > 0 ) LOG.info out.toString()
+if( err.size() > 0 ) LOG.info err.toString()
                 LOG.info("Autopilot started:"+autopilotThread.toString())
-                UNIXProcess.ProcessPipeInputStream oStream = autopilotThread.errorStream
-                List<String> errors = oStream.readLines()
-                LOG.info("Error stream: $errors")
         }
 
 
@@ -332,7 +335,7 @@ abstract class VehicleService {
 
 
     byte[] takeStill() {
-        if (currentDriveMode == "user") {
+        //if (currentDriveMode == "user") {
             if (!piCamera) {
                 synchronized (this) {
                     long startTime = System.currentTimeMillis()
@@ -367,11 +370,11 @@ abstract class VehicleService {
             }
         } else {
             if (autopilotThread) {
-                LOG.info("autopilot thread alive=${autopilotThread.alive} exitValue=${autopilotThread.exitValue()}")
+                LOG.info("autopilot thread alive=${autopilotThread.alive}")
             }
         }
 
-    }
+    //}
 
 
 
