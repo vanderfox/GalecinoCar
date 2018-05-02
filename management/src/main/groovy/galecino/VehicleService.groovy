@@ -260,6 +260,9 @@ abstract class VehicleService {
         } else if (driveMode == "local") {
             //stop all remote control and reset motors?
                 //stop all remote control and reset motors in case car is moving
+		if (piCamera) {
+                    piCamera.stop()
+                }
                 stop()
                 if (th) {
                     th.stop()
@@ -335,7 +338,7 @@ if( err.size() > 0 ) LOG.info err.toString()
 
 
     byte[] takeStill() {
-        //if (currentDriveMode == "user") {
+        if (!autopilotThread || autopilotThread.alive) {
             if (!piCamera) {
                 synchronized (this) {
                     long startTime = System.currentTimeMillis()
@@ -374,7 +377,7 @@ if( err.size() > 0 ) LOG.info err.toString()
             }
         }
 
-    //}
+    }
 
 
 
