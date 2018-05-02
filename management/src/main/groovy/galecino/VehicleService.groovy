@@ -260,8 +260,9 @@ abstract class VehicleService {
         } else if (driveMode == "local") {
             //stop all remote control and reset motors?
                 //stop all remote control and reset motors in case car is moving
-		if (piCamera) {
+                if (piCamera) {
                     piCamera.stop()
+                    piCamera = null
                 }
                 stop()
                 if (th) {
