@@ -261,7 +261,9 @@ abstract class VehicleService {
             //stop all remote control and reset motors?
                 //stop all remote control and reset motors in case car is moving
                 if (piCamera) {
+                    piCamera.turnOffPreview()
                     piCamera.stop()
+                    Thread.sleep(500)
                     piCamera = null
                 }
                 stop()
