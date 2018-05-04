@@ -343,7 +343,7 @@ if( err.size() > 0 ) LOG.info err.toString()
 
 
     byte[] takeStill() {
-        if (!autopilotThread || autopilotThread.alive) {
+        if (!autopilotThread || !autopilotThread.alive) {
             if (!piCamera) {
                 synchronized (this) {
                     long startTime = System.currentTimeMillis()
