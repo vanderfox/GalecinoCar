@@ -261,10 +261,12 @@ abstract class VehicleService {
             //stop all remote control and reset motors?
                 //stop all remote control and reset motors in case car is moving
                 if (piCamera) {
+
                     piCamera.turnOffPreview()
                     piCamera.stop()
+
                     Thread.sleep(500)
-                    piCamera = null
+                    //piCamera = null
                 }
                 stop()
                 if (th) {
@@ -354,7 +356,7 @@ if( err.size() > 0 ) LOG.info err.toString()
                     long endTime = System.currentTimeMillis()
                     System.out.println("init camera took ${endTime - startTime}ms")
                 }
-            }
+
             long startTime = System.currentTimeMillis()
 
             BufferedImage image = piCamera.takeBufferedStill(160, 120)
@@ -373,6 +375,10 @@ if( err.size() > 0 ) LOG.info err.toString()
                 imageOut
             } else {
                 null
+            }
+            } else {
+                piCamera.stop()
+                piCamera = null
             }
         } else {
             if (autopilotThread) {
