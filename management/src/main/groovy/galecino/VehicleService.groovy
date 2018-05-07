@@ -31,7 +31,7 @@ abstract class VehicleService {
     private static final int MOTOR_STOPPED = 760
     private static final int STEERING_LEFT = 880
     private static final float STEERING_STRAIGHT_ANGLE = 44.0
-    private static final int STEERING_RIGHT = 360
+    private static final int STEERING_RIGHT = 570
     private static final int MAX_THROTTLE_FORWORD = 1000
     private static final int MIN_THROTTLE_FORWORD = 800
     private static final int MAX_THROTTLE_BACKWARD = 500
@@ -225,22 +225,22 @@ abstract class VehicleService {
     }
 
 
-   /* void steer(float angle, float trim = 0.0) {
+    void steer(float angle, float trim = 0.0) {
         // seems like 360 right 520 left
         PWMPCA9685Device device = new PWMPCA9685Device()
-        device.setPWMFrequency(pwmFrequency)
+        device.setPWMFrequency(50) //internetz says 50 for servos is the shiz
         Servo servo0 = new PCA9685Servo(device.getChannel(1))
         LOG.info("steer angle non corrected:${angle} trim:${trim}")
         servo0.setInput((angle).toFloat())
         System.out.println("configTrim in service=${configTrim}")
-        if (trim == 0) {
-           trim = configTrim
-        }
-        servo0.setTrim(trim)
-        System.out.println("corrected steer angle:${angle} trim:${trim}")
+        //if (trim == 0) {
+        //   trim = configTrim
+        //}
+        //servo0.setTrim(trim)
+        //System.out.println("corrected steer angle:${angle} trim:${trim}")
 
-    }*/
-    void steer(float angle, float trim = 0.0) {
+    }
+   /* void steer(float angle, float trim = 0.0) {
         // seems like 360 right 520 left
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(pwmFrequency)
@@ -248,9 +248,9 @@ abstract class VehicleService {
         //LOG.info("init motor frequency:"+frequency+" on:"+on+" off:"+off)
         int pulse = map_range(angle,-1, 1,
                 STEERING_LEFT, STEERING_RIGHT)
-        motor0.setPWM(on, pulse)
+        motor0.setPWM(0, pulse)
 
-    }
+    }*/
 
     void stop(int frequency = SERVO_FREQUENCY, int on = 0, int off = MOTOR_STOPPED) {
         PWMPCA9685Device device = new PWMPCA9685Device()
