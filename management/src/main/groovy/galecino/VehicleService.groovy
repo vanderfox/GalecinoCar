@@ -34,8 +34,8 @@ abstract class VehicleService {
     private static final int STEERING_RIGHT = 570
     private static final int MAX_THROTTLE_FORWORD = 1000
     private static final int MIN_THROTTLE_FORWORD = 800
-    private static final int MAX_THROTTLE_BACKWARD = 500
-    private static final int MIN_THROTTLE_BACKWARD = 730
+    private static final int MAX_THROTTLE_BACKWARD = 610
+    private static final int MIN_THROTTLE_BACKWARD = 715
     @Value('${galecino.servo.trim:0.0}')
     protected float configTrim
     @Value('${galecino.pwmFrequency:20}')
