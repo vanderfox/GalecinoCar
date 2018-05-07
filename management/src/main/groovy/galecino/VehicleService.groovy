@@ -233,6 +233,7 @@ abstract class VehicleService {
         LOG.info("steer angle non corrected:${angle} trim:${trim}")
         servo0.setInput((angle).toFloat())
         System.out.println("configTrim in service=${configTrim}")
+        Thread.sleep(1000)
         //if (trim == 0) {
         //   trim = configTrim
         //}
