@@ -68,15 +68,14 @@ abstract class VehicleService {
         LOG.info("Init thread finished")
     }
 
+    /**
+     * this is the main drive thread which contains a queue to avoid overwhelming the car with requests
+     */
     private void startDriveThread() {
 
         th = Thread.start {
             try {
                 LOG.info("inside thread")
-                /*if (!commands && !delayThread) {
-                    //this is a workaround because @PostConstrct seems to have stopped working
-                    init()
-                }*/
                 while (running) {
                     def recent = []
 
@@ -88,8 +87,6 @@ abstract class VehicleService {
                         def command = recent[-1]
                         float throttle = command.throttle
                         LOG.info command.direction
-                        def duration = command.duration
-
                         switch (command.direction) {
                             case 'forward':
                                 if (process && process?.alive) {
@@ -135,20 +132,19 @@ abstract class VehicleService {
             }
         }
     }
+
+    /**
+     * test method to make sure things are connected properly
+     */
     void pwmTest() {
         System.out.println("Creating device...");
         PWMPCA9685Device device = new PWMPCA9685Device();
         device.setPWMFrequency(SERVO_FREQUENCY);
         Servo servo0 = new PCA9685Servo(device.getChannel(1));
-        //Servo servo1 = new PCA9685Servo(device.getChannel(0));
         PWMPCA9685Device.PWMChannel motor0 = device.getChannel(0);
-        //PWMPCA9685Device.PWMChannel motor1 = device.getChannel(3);
-
         System.out.println("Setting start conditions...");
         servo0.setInput(0);
-        ///servo1.setInput(0);
         motor0.setPWM(0, MOTOR_STOPPED);
-        //motor1.setPWM(0, MOTOR_STOPPED);
 
         System.out.println("Press enter to run loop!");
         System.in.read();
@@ -157,65 +153,66 @@ abstract class VehicleService {
             servo0.setInput(-1);
             Thread.sleep(500);
             servo0.setInput(1);
-            //servo1.setInput(-1);
             motor0.setPWM(0, 800);
-            //motor1.setPWM(0, MOTOR_FORWARD);
             Thread.sleep(500);
             servo0.setInput(1);;
-            //servo1.setInput(1);;
             motor0.setPWM(0, 200);
-            //motor1.setPWM(0, MOTOR_BACKWARD);
             Thread.sleep(500);
             servo0.setInput(0);
-            //servo1.setInput(0);
             motor0.setPWM(0, MOTOR_STOPPED);
-            //motor1.setPWM(0, MOTOR_STOPPED);
             Thread.sleep(1000);
         }
     }
 
+    /**
+     * controls the throttle on the car for forward and backward (based on pwm values
+     * @param frequency
+     * @param on
+     * @param off
+     */
     void forward(int frequency = pwmFrequency, int on = 0, int off = MOTOR_FORWARD) {
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(frequency)
         PWMPCA9685Device.PWMChannel motor0 = device.getChannel(0)
         LOG.info("fwd frequency:"+frequency+" on:"+on+" off:"+off)
-/**
-        if (pwmFrequency < MOTOR_STOPPED) {
-            //for backward we have to do a dance
-            motor0.setPWM(on,MOTOR_BACKWARD)
-            Thread.sleep(100)
-            motor0.setPWM(on,MOTOR_STOPPED)
-            Thread.sleep(100)
-            motor0.setPWM(on,pwmFrequency)
-        } else {
-            motor0.setPWM(on, off)
-        }**/
         motor0.setPWM(on,off)
-        Thread.sleep(1000)
-
+        Thread.sleep(1000) // this is important or the motor doesn't have time to respond
     }
+
+    /**
+     * this makes the motors 'wake up' with special pwm values.
+     * @param frequency
+     * @param on
+     * @param off
+     */
     void initThrottle(int frequency = pwmFrequency, int on = 0, int off = MOTOR_STOPPED) {
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(frequency)
         PWMPCA9685Device.PWMChannel motor0 = device.getChannel(0)
         LOG.info("init motor frequency:"+frequency+" on:"+on+" off:"+off)
         motor0.setPWM(on, off)
-
     }
+
+    /**
+     * make steering servo 'wake up' with special pwm values.
+     * @param frequency
+     * @param on
+     * @param off
+     */
     void initSteering(int frequency = pwmFrequency, int on = 0, int off = 580) {
-       /* Servo servo0 = new PCA9685Servo(device.getChannel(1))
-        LOG.info("steer angle non corrected:${angle} trim:${trim}")
-        servo0.setInput((angle).toFloat())*/
-
-
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(frequency)
         PWMPCA9685Device.PWMChannel motor0 = device.getChannel(1)
         LOG.info("init motor frequency:"+frequency+" on:"+on+" off:"+off)
         motor0.setPWM(on, off)
-
     }
 
+    /**
+     * This isn't used in drive mode but for diagnostics via controller
+     * @param frequency
+     * @param on
+     * @param off
+     */
     void backward(int frequency = pwmFrequency, int on = 0, int off = MOTOR_BACKWARDD) {
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(frequency)
@@ -224,34 +221,26 @@ abstract class VehicleService {
         motor0.setPWM(on, off)
     }
 
-
+    /**
+     * controls steering of the car
+     * @param angle
+     * @param trim
+     */
     void steer(float angle, float trim = 0.0) {
         // seems like 360 right 520 left
         PWMPCA9685Device device = new PWMPCA9685Device()
         device.setPWMFrequency(50) //internetz says 50 for servos is the shiz
         Servo servo0 = new PCA9685Servo(device.getChannel(1))
         LOG.info("steer angle non corrected:${angle} trim:${trim}")
+        if (trim != 0) {
+            trim = configTrim
+            servo0.setTrim(trim)
+        }
         servo0.setInput((angle).toFloat())
         System.out.println("configTrim in service=${configTrim}")
-        Thread.sleep(1000)
-        //if (trim == 0) {
-        //   trim = configTrim
-        //}
-        //servo0.setTrim(trim)
-        //System.out.println("corrected steer angle:${angle} trim:${trim}")
+        Thread.sleep(1000) // impor
 
     }
-   /* void steer(float angle, float trim = 0.0) {
-        // seems like 360 right 520 left
-        PWMPCA9685Device device = new PWMPCA9685Device()
-        device.setPWMFrequency(pwmFrequency)
-        PWMPCA9685Device.PWMChannel motor0 = device.getChannel(1)
-        //LOG.info("init motor frequency:"+frequency+" on:"+on+" off:"+off)
-        int pulse = map_range(angle,-1, 1,
-                STEERING_LEFT, STEERING_RIGHT)
-        motor0.setPWM(0, pulse)
-
-    }*/
 
     void stop(int frequency = SERVO_FREQUENCY, int on = 0, int off = MOTOR_STOPPED) {
         PWMPCA9685Device device = new PWMPCA9685Device()
@@ -301,15 +290,14 @@ abstract class VehicleService {
                     delayThread.shutdownNow()
                 }
                 def out = new StringBuffer()
-		def err = new StringBuffer()
+		        def err = new StringBuffer()
                 autopilotThread = "python /home/pi/d2/galencino.py --model /home/pi/d2/models/smartpilot".execute()
                 autopilotThread.consumeProcessOutput( out, err )
                 autopilotThread.waitFor()
-if( out.size() > 0 ) LOG.info out.toString()
-if( err.size() > 0 ) LOG.info err.toString()
+                if( out.size() > 0 ) LOG.info out.toString()
+                if( err.size() > 0 ) LOG.info err.toString()
                 LOG.info("Autopilot started:"+autopilotThread.toString())
         }
-
 
     }
 
@@ -350,13 +338,19 @@ if( err.size() > 0 ) LOG.info err.toString()
             }
         }
 
-
     }
 
+    /**
+     * Linear mapping between two ranges of values
+     * @param x
+     * @param X_min
+     * @param X_max
+     * @param Y_min
+     * @param Y_max
+     * @return
+     */
     float map_range(float x, int X_min, int X_max, int Y_min, int Y_max) {
-    //    '''
-    //Linear mapping between two ranges of values
-    //'''
+
         float X_range = X_max - X_min
         float Y_range = Y_max - Y_min
         float XY_ratio = X_range / Y_range
@@ -366,7 +360,12 @@ if( err.size() > 0 ) LOG.info err.toString()
         return y
     }
 
-
+    /**
+     * takes a still image from camera
+     * In the future we can keep a thread open off the video stream and slice off stills from it for
+     * more real time performance, this is because the camera can only take pics every 750ms
+     * @return array of bytes which is the image
+     */
     byte[] takeStill() {
         if (!autopilotThread || !autopilotThread.alive) {
             if (!piCamera) {
@@ -412,7 +411,5 @@ if( err.size() > 0 ) LOG.info err.toString()
         }
 
     }
-
-
 
 }

@@ -62,8 +62,6 @@ class VehicleController {
         vehicleService.pwmTest()
     }
 
-
-
     @Transactional
     @PostConstruct
     void setup() {
@@ -101,22 +99,9 @@ class VehicleController {
 
     @Get(produces = "image/jpeg")
     Publisher<HttpResponse> videoRx() {
-        //byte[] image = takeStill()
         System.out.println("Image size="+image?.size())
-        //File imageFile = new File("${System.currentTimeMillis()}.jpg")
-
-        //imageFile.withDataOutputStream { out ->
-        //    out.write(image)
-        //}
-        //ByteBuffer byteBuffer = ByteBuffer.wrap(image)
-        //if (!image) {
-        //    image = takeStill() //retry sometimes its null
-        //}
         Flowable<byte[]> stillFlow = Flowable.fromArray(takeStill())
-
         return Flowable.just(HttpResponse.ok(Single.fromPublisher(stillFlow).blockingGet()).header("Content-type","multipart/x-mixed-replace;boundary=--boundarydonotcross"))
-
-        //return image
     }
 
 
@@ -124,7 +109,6 @@ class VehicleController {
     HttpResponse<String> pwmTest() {
         vehicleService.pwmTest()
         return HttpResponse.ok("Car Test started in endless loop")
-
     }
 
     @Get
@@ -151,7 +135,6 @@ class VehicleController {
         vehicleService.steer(angle,trim)
         return HttpResponse.ok("angle:${angle}")
     }
-
 
     @Get(produces = 'text/html')
     HttpResponse<String> drive(float angle, float throttle, String drive_mode = "user", Boolean recording = false) {
