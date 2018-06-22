@@ -62,8 +62,8 @@ class VehicleController {
         vehicleService.pwmTest()
     }
 
-    @Transactional
-    @PostConstruct
+    //@Transactional
+    //@PostConstruct
     void setup() {
         //vehicleService.save 'VanderfoxCar'
         LOG.info("called setup from VehicleController")

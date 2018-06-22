@@ -12,6 +12,7 @@ import grails.gorm.services.Service
 import io.micronaut.context.annotation.Value
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import groovy.transform.Synchronized
 
 import javax.annotation.PostConstruct
 import javax.imageio.ImageIO
@@ -58,6 +59,7 @@ abstract class VehicleService {
     @PostConstruct
     void init() {
         LOG.info("Init thread started")
+        initCamera()
         delayThread = Executors.newScheduledThreadPool(1)
         commands = new ArrayBlockingQueue(100)
         initThrottle(20,0,MOTOR_FORWARD) // make sure motor is ready
@@ -66,6 +68,23 @@ abstract class VehicleService {
         Thread.sleep(100)
         startDriveThread()
         LOG.info("Init thread finished")
+    }
+
+    @Synchronized
+    void initCamera() {
+
+
+                    long startTime = System.currentTimeMillis()
+                    piCamera = new RPiCamera()
+                    piCamera.setAWB(AWB.AUTO)        // Change Automatic White Balance setting to automatic
+                            .setTimeout(30)            // Wait 1 second to take the image
+                            .setBrightness(60)
+                            .turnOffPreview()            // Turn on image preview
+                            .setEncoding(Encoding.JPG) //
+                    Thread.sleep(1000)
+                    long endTime = System.currentTimeMillis()
+                    System.out.println("init camera took ${endTime - startTime}ms")
+
     }
 
     /**
@@ -360,6 +379,8 @@ abstract class VehicleService {
         return y
     }
 
+
+
     /**
      * takes a still image from camera
      * In the future we can keep a thread open off the video stream and slice off stills from it for
@@ -369,18 +390,8 @@ abstract class VehicleService {
     byte[] takeStill() {
         if (!autopilotThread || !autopilotThread.alive) {
             if (!piCamera) {
-                synchronized (this) {
-                    long startTime = System.currentTimeMillis()
-                    piCamera = new RPiCamera()
-                    piCamera.setAWB(AWB.AUTO)        // Change Automatic White Balance setting to automatic
-                            .setTimeout(30)            // Wait 1 second to take the image
-                            .setBrightness(60)
-                            .turnOffPreview()            // Turn on image preview
-                            .setEncoding(Encoding.JPG) //
-                    long endTime = System.currentTimeMillis()
-                    System.out.println("init camera took ${endTime - startTime}ms")
-                }
-
+              initCamera() 
+	    }
             long startTime = System.currentTimeMillis()
 
             BufferedImage image = piCamera.takeBufferedStill(160, 120)
@@ -400,10 +411,9 @@ abstract class VehicleService {
             } else {
                 null
             }
-            } else {
-                piCamera.stop()
-                piCamera = null
-            }
+            //    piCamera.stop()
+            //    piCamera = null
+            //}
         } else {
             if (autopilotThread) {
                 LOG.info("autopilot thread alive=${autopilotThread.alive}")
