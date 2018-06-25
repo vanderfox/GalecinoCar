@@ -56,7 +56,7 @@ abstract class VehicleService {
     protected static final Logger LOG = LoggerFactory.getLogger(VehicleService.class);
     String currentDriveMode = "user"
 
-    //@PostConstruct
+    @PostConstruct
     void init() {
         LOG.info("Init thread started")
         initCamera()
@@ -403,7 +403,7 @@ abstract class VehicleService {
                 //}
 
               initCamera() 
-	    }
+	        }
             long startTime = System.currentTimeMillis()
 
             BufferedImage image = piCamera.takeBufferedStill(160, 120)
@@ -433,6 +433,6 @@ abstract class VehicleService {
            // }
         }
 
-    }
+    //}
 
 }
