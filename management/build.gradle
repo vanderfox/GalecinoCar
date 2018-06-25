@@ -1,3 +1,15 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.4"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE"
+        classpath "net.ltgt.gradle:gradle-apt-plugin:0.15"
+    }
+}
+
 plugins {
     id 'com.github.johnrengelman.shadow' version '2.0.1'
     id 'groovy'
@@ -23,30 +35,29 @@ jar {
 }
 repositories {
 
-    maven {
-        credentials {
-            // define these in .gradle/gradle.properties below your HOME directory
-            username micronautRepoUsername
-            password micronautRepoPassword
-        }
-        url 'https://repo.micronaut.io/artifactory/libs-snapshots-local'
-    }
     mavenLocal()
     mavenCentral()
+    maven { url "https://jcenter.bintray.com" }
     maven { url  "https://dl.bintray.com/vanderfox/JRPiCam" }
 
     // required if using runtime-green-lightning below
 //    maven { url 'https://repository-pronghorn.forge.cloudbees.com/release' }
 }
+/**
+dependencyManagement {
+    imports {
+        mavenBom 'io.micronaut:bom:1.0.0.M1'
+    }
+}**/
 dependencies {
     //Properties props = new Properties()
     //new File("gradle.properties").withReader { props.load(it) }
-    compileOnly "io.micronaut:inject-groovy:${particleProjectVersion}"
-    compile "io.micronaut:runtime-groovy:${particleProjectVersion}"
+    compileOnly "io.micronaut:inject-groovy:1.0.0.M1"
+    compile "io.micronaut:runtime-groovy:1.0.0.M1"
     compile "hopding.jrpicam:jrpicam:1.1.1"
     // use one of these servers, not both...
-    compile "io.micronaut:http-server-netty:${particleProjectVersion}"
-    compile "io.micronaut.configuration:hibernate-gorm:${particleProjectVersion}"
+    compile "io.micronaut:http-server-netty:1.0.0.M1"
+    compile "io.micronaut.configuration:hibernate-gorm:1.0.0.M1"
     compile "com.pi4j:pi4j-core:1.1"
     compile "com.pi4j:pi4j-gpio-extension:1.1"
     compile "com.pi4j:pi4j-device:1.1"

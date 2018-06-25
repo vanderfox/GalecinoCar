@@ -55,7 +55,7 @@ abstract class VehicleService {
     protected static final Logger LOG = LoggerFactory.getLogger(VehicleService.class);
     String currentDriveMode = "user"
 
-    @PostConstruct
+    //@PostConstruct
     void init() {
         LOG.info("Init thread started")
         delayThread = Executors.newScheduledThreadPool(1)
@@ -367,19 +367,19 @@ abstract class VehicleService {
      * @return array of bytes which is the image
      */
     byte[] takeStill() {
-        if (!autopilotThread || !autopilotThread.alive) {
+        //if (!autopilotThread || !autopilotThread.alive) {
             if (!piCamera) {
-                synchronized (this) {
-                    long startTime = System.currentTimeMillis()
+                //synchronized (this) {
+                //    startTime = System.currentTimeMillis()
                     piCamera = new RPiCamera()
                     piCamera.setAWB(AWB.AUTO)        // Change Automatic White Balance setting to automatic
                             .setTimeout(30)            // Wait 1 second to take the image
                             .setBrightness(60)
                             .turnOffPreview()            // Turn on image preview
                             .setEncoding(Encoding.JPG) //
-                    long endTime = System.currentTimeMillis()
-                    System.out.println("init camera took ${endTime - startTime}ms")
-                }
+                    //ng endTime = System.currentTimeMillis()
+                    //System.out.println("init camera took ${endTime - startTime}ms")
+                //}
 
             long startTime = System.currentTimeMillis()
 
@@ -400,14 +400,14 @@ abstract class VehicleService {
             } else {
                 null
             }
-            } else {
-                piCamera.stop()
-                piCamera = null
-            }
-        } else {
-            if (autopilotThread) {
-                LOG.info("autopilot thread alive=${autopilotThread.alive}")
-            }
+            //} else {
+            //    piCamera.stop()
+            //    piCamera = null
+            //}
+        //} else {
+        //    if (autopilotThread) {
+        //        LOG.info("autopilot thread alive=${autopilotThread.alive}")
+           // }
         }
 
     }
