@@ -12,6 +12,7 @@ import grails.gorm.services.Service
 import io.micronaut.context.annotation.Value
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import groovy.transform.Synchronized
 
 import javax.annotation.PostConstruct
 import javax.imageio.ImageIO
@@ -58,6 +59,7 @@ abstract class VehicleService {
     //@PostConstruct
     void init() {
         LOG.info("Init thread started")
+        initCamera()
         delayThread = Executors.newScheduledThreadPool(1)
         commands = new ArrayBlockingQueue(100)
         initThrottle(20,0,MOTOR_FORWARD) // make sure motor is ready
@@ -66,6 +68,23 @@ abstract class VehicleService {
         Thread.sleep(100)
         startDriveThread()
         LOG.info("Init thread finished")
+    }
+
+    @Synchronized
+    void initCamera() {
+
+
+                    long startTime = System.currentTimeMillis()
+                    piCamera = new RPiCamera()
+                    piCamera.setAWB(AWB.AUTO)        // Change Automatic White Balance setting to automatic
+                            .setTimeout(30)            // Wait 1 second to take the image
+                            .setBrightness(60)
+                            .turnOffPreview()            // Turn on image preview
+                            .setEncoding(Encoding.JPG) //
+                    Thread.sleep(1000)
+                    long endTime = System.currentTimeMillis()
+                    System.out.println("init camera took ${endTime - startTime}ms")
+
     }
 
     /**
@@ -229,7 +248,7 @@ abstract class VehicleService {
     void steer(float angle, float trim = 0.0) {
         // seems like 360 right 520 left
         PWMPCA9685Device device = new PWMPCA9685Device()
-        device.setPWMFrequency(50) //internetz says 50 for servos is the shiz
+        device.setPWMFrequency(50) //internet says 50hz for servos is optimal
         Servo servo0 = new PCA9685Servo(device.getChannel(1))
         LOG.info("steer angle non corrected:${angle} trim:${trim}")
         if (trim != 0) {
@@ -238,7 +257,7 @@ abstract class VehicleService {
         }
         servo0.setInput((angle).toFloat())
         System.out.println("configTrim in service=${configTrim}")
-        Thread.sleep(1000) // impor
+        Thread.sleep(1000) // important to give time for servo to move
 
     }
 
@@ -360,6 +379,8 @@ abstract class VehicleService {
         return y
     }
 
+
+
     /**
      * takes a still image from camera
      * In the future we can keep a thread open off the video stream and slice off stills from it for
@@ -381,6 +402,8 @@ abstract class VehicleService {
                     //System.out.println("init camera took ${endTime - startTime}ms")
                 //}
 
+              initCamera() 
+	    }
             long startTime = System.currentTimeMillis()
 
             BufferedImage image = piCamera.takeBufferedStill(160, 120)

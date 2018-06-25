@@ -62,8 +62,8 @@ class VehicleController {
         vehicleService.pwmTest()
     }
 
-    @Transactional
-    @PostConstruct
+    //@Transactional
+    //@PostConstruct
     void setup() {
         //vehicleService.save 'VanderfoxCar'
         LOG.info("called setup from VehicleController")
@@ -137,11 +137,12 @@ class VehicleController {
     }
 
     @Get(produces = 'text/html')
-    HttpResponse<String> drive(float angle, float throttle, String drive_mode = "user", Boolean recording = false) {
-        //vehicleService.steer(angle)
+    HttpResponse<String> drive(float angle,
+                               float throttle,
+                               String drive_mode = "user",
+                               Boolean recording = false) {
         System.out.println("drive called")
         vehicleService.driveScheduled(angle,throttle, drive_mode, recording)
-        //vehicleService.drive(angle,throttle)
         return HttpResponse.ok("angle:${angle} throttle:${throttle}")
     }
 }
