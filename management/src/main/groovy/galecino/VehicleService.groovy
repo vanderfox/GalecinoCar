@@ -57,23 +57,24 @@ abstract class VehicleService {
     String currentDriveMode = "user"
 
     @PostConstruct
+    @Synchronized
     void init() {
         LOG.info("Init thread started")
-        initCamera()
+        //initCamera()
         delayThread = Executors.newScheduledThreadPool(1)
         commands = new ArrayBlockingQueue(100)
         initThrottle(20,0,MOTOR_FORWARD) // make sure motor is ready
         Thread.sleep(100)
         initThrottle(20,0,MOTOR_STOPPED)
         Thread.sleep(100)
-        startDriveThread()
+        //startDriveThread()
         LOG.info("Init thread finished")
     }
 
-    @Synchronized
+    //@Synchronized
     void initCamera() {
-
-
+/**
+                    System.out.println("start init camera")
                     long startTime = System.currentTimeMillis()
                     piCamera = new RPiCamera()
                     piCamera.setAWB(AWB.AUTO)        // Change Automatic White Balance setting to automatic
@@ -84,7 +85,7 @@ abstract class VehicleService {
                     Thread.sleep(1000)
                     long endTime = System.currentTimeMillis()
                     System.out.println("init camera took ${endTime - startTime}ms")
-
+**/
     }
 
     /**
@@ -402,7 +403,7 @@ abstract class VehicleService {
                     //System.out.println("init camera took ${endTime - startTime}ms")
                 //}
 
-              initCamera() 
+              //initCamera() 
 	        }
             long startTime = System.currentTimeMillis()
 
