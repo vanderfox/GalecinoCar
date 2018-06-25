@@ -391,6 +391,7 @@ abstract class VehicleService {
     byte[] takeStill() {
         //if (!autopilotThread || !autopilotThread.alive) {
             if (!piCamera) {
+                System.out.println("re-init camera")
                 //synchronized (this) {
                 //    startTime = System.currentTimeMillis()
                     piCamera = new RPiCamera()
@@ -413,11 +414,15 @@ abstract class VehicleService {
             startTime = System.currentTimeMillis()
             ByteArrayOutputStream baos = new ByteArrayOutputStream()
             if (!image) {
+                System.out.println("image was null retrying pic")
                 image = piCamera.takeBufferedStill(160, 120)
             }
             if (image) {
                 ImageIO.write(image, "jpg", baos)
                 byte[] imageOut = baos.toByteArray()
+                FileOutputStream faos = new FileOutputStream("/tmp/${System.currentTimeMillis()}.jpg")
+                faos.write(imageOut)
+                faos.close()
                 endTime = System.currentTimeMillis()
                 System.out.println("pic jpg convert took ${endTime - startTime}ms")
                 imageOut
