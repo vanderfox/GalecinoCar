@@ -248,7 +248,7 @@ abstract class VehicleService {
     void steer(float angle, float trim = 0.0) {
         // seems like 360 right 520 left
         PWMPCA9685Device device = new PWMPCA9685Device()
-        device.setPWMFrequency(50) //internetz says 50 for servos is the shiz
+        device.setPWMFrequency(50) //internet says 50hz for servos is optimal
         Servo servo0 = new PCA9685Servo(device.getChannel(1))
         LOG.info("steer angle non corrected:${angle} trim:${trim}")
         if (trim != 0) {
@@ -257,7 +257,7 @@ abstract class VehicleService {
         }
         servo0.setInput((angle).toFloat())
         System.out.println("configTrim in service=${configTrim}")
-        Thread.sleep(1000) // impor
+        Thread.sleep(1000) // important to give time for servo to move
 
     }
 
