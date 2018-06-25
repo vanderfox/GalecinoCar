@@ -60,14 +60,14 @@ abstract class VehicleService {
     @Synchronized
     void init() {
         LOG.info("Init thread started")
-        //initCamera()
+        initCamera()
         delayThread = Executors.newScheduledThreadPool(1)
         commands = new ArrayBlockingQueue(100)
         initThrottle(20,0,MOTOR_FORWARD) // make sure motor is ready
         Thread.sleep(100)
         initThrottle(20,0,MOTOR_STOPPED)
         Thread.sleep(100)
-        //startDriveThread()
+        startDriveThread()
         LOG.info("Init thread finished")
     }
 

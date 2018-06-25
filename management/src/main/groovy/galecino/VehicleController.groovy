@@ -90,7 +90,7 @@ class VehicleController {
         if (!image) {
             image = takeStill() //retry sometimes its null	
 	    }
-        return HttpResponse.ok(image).header("Content-type","multipart/x-mixed-replace;boundary=--boundarydonotcross")
+        return HttpResponse.ok(image).header("Content-type","image/jpeg;multipart/x-mixed-replace;boundary=--boundarydonotcross")
 
        //return image
     }
