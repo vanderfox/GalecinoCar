@@ -42,6 +42,8 @@ abstract class VehicleService {
     @Value('${galecino.pwmFrequency:20}')
     protected int pwmFrequency
     Process autopilotThread
+    @Value('${galecino.autoPilotName:smartpilot}')
+    String autoPilotName;
 
     abstract List<Vehicle> list()
     abstract Vehicle save(String name)
@@ -71,21 +73,20 @@ abstract class VehicleService {
         LOG.info("Init thread finished")
     }
 
-    //@Synchronized
     void initCamera() {
-/**
-                    System.out.println("start init camera")
-                    long startTime = System.currentTimeMillis()
-                    piCamera = new RPiCamera()
-                    piCamera.setAWB(AWB.AUTO)        // Change Automatic White Balance setting to automatic
-                            .setTimeout(30)            // Wait 1 second to take the image
-                            .setBrightness(60)
-                            .turnOffPreview()            // Turn on image preview
-                            .setEncoding(Encoding.JPG) //
-                    Thread.sleep(1000)
-                    long endTime = System.currentTimeMillis()
-                    System.out.println("init camera took ${endTime - startTime}ms")
-**/
+
+        System.out.println("start init camera")
+        long startTime = System.currentTimeMillis()
+        piCamera = new RPiCamera()
+        piCamera.setAWB(AWB.AUTO)        // Change Automatic White Balance setting to automatic
+                .setTimeout(30)            // Wait 1 second to take the image
+                .setBrightness(60)
+                .turnOffPreview()            // Turn on image preview
+                .setEncoding(Encoding.JPG) //
+        Thread.sleep(1000)
+        long endTime = System.currentTimeMillis()
+        System.out.println("init camera took ${endTime - startTime}ms")
+
     }
 
     /**
@@ -311,7 +312,7 @@ abstract class VehicleService {
                 }
                 def out = new StringBuffer()
 		        def err = new StringBuffer()
-                autopilotThread = "python /home/pi/d2/galencino.py --model /home/pi/d2/models/smartpilot".execute()
+                autopilotThread = "python /home/pi/d2/galencino.py --model /home/pi/d2/models/${autoPilotName}".execute()
                 autopilotThread.consumeProcessOutput( out, err )
                 autopilotThread.waitFor()
                 if( out.size() > 0 ) LOG.info out.toString()

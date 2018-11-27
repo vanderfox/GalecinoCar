@@ -15,33 +15,22 @@
  */
 package galecino
 
-import com.hopding.jrpicam.RPiCamera
-import grails.gorm.transactions.Transactional
+
 import io.micronaut.context.annotation.Value
 import io.micronaut.http.HttpResponse
-import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
-import io.micronaut.http.annotation.Post
 import io.reactivex.Flowable
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import org.reactivestreams.Publisher
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-
-import javax.annotation.PostConstruct
-import javax.imageio.ImageIO
 import javax.inject.Inject
 import javax.inject.Singleton
-import java.awt.image.BufferedImage
-import io.micronaut.http.MediaType
 
-import java.nio.ByteBuffer
-import java.util.concurrent.ArrayBlockingQueue
 
 /**
- * @author Graeme Rocher
+ * @author Ryan Vanderwerf
  * @since 1.0
  */
 @Controller("/")
@@ -62,40 +51,19 @@ class VehicleController {
         vehicleService.pwmTest()
     }
 
-    //@Transactional
-    //@PostConstruct
-    void setup() {
-        //vehicleService.save 'VanderfoxCar'
-        LOG.info("called setup from VehicleController")
-        vehicleService.init()
-        LOG.info("finished setup from VehicleController")
-    }
-
-
     byte[] takeStill() {
        return vehicleService.takeStill()
     }
-
 
     @Get(produces = "image/jpeg")
     HttpResponse<byte[]> video() {
         byte[] image = takeStill()
         System.out.println("Image size="+image?.size())
-        //File imageFile = new File("${System.currentTimeMillis()}.jpg")
-
-        //imageFile.withDataOutputStream { out ->
-        //    out.write(image)
-        //}
-        //ByteBuffer byteBuffer = ByteBuffer.wrap(image)
         if (!image) {
             image = takeStill() //retry sometimes its null	
 	    }
         return HttpResponse.ok(image).header("Content-type","image/jpeg;multipart/x-mixed-replace;boundary=--boundarydonotcross")
-
-       //return image
     }
-
-
 
     @Get(produces = "image/jpeg")
     Publisher<HttpResponse> videoRx() {
