@@ -55,7 +55,7 @@ class VehicleController {
        return vehicleService.takeStill()
     }
 
-    @Get(produces = "image/jpeg")
+    @Get(uri = "/video",produces = "image/jpeg")
     HttpResponse<byte[]> video() {
         byte[] image = takeStill()
         System.out.println("Image size="+image?.size())
@@ -65,7 +65,7 @@ class VehicleController {
         return HttpResponse.ok(image).header("Content-type","image/jpeg;multipart/x-mixed-replace;boundary=--boundarydonotcross")
     }
 
-    @Get(produces = "image/jpeg")
+    @Get(uri="/videoRx", produces = "image/jpeg")
     Publisher<HttpResponse> videoRx() {
         System.out.println("Image size="+image?.size())
         Flowable<byte[]> stillFlow = Flowable.fromArray(takeStill())
@@ -79,19 +79,19 @@ class VehicleController {
         return HttpResponse.ok("Car Test started in endless loop")
     }
 
-    @Get
+    @Get("/forward")
     HttpResponse<String> forward(int frequency, int on, int off) {
        vehicleService.forward(frequency,on,off)
        return HttpResponse.ok("forward")
     }
 
-    @Get
+    @Get("/backward")
     HttpResponse<String> backward(int frequency, int on, int off) {
         vehicleService.backward(frequency, on, off)
         return HttpResponse.ok("backward")
     }
 
-    @Get
+    @Get("/stop")
     HttpResponse<String> stop(int frequency, int on, int off) {
         vehicleService.stop(frequency,on,off)
         return HttpResponse.ok("stop")
@@ -104,7 +104,7 @@ class VehicleController {
         return HttpResponse.ok("angle:${angle}")
     }
 
-    @Get(produces = 'text/html')
+    @Get(uri = "/drive", produces = 'text/html')
     HttpResponse<String> drive(float angle,
                                float throttle,
                                String drive_mode = "user",

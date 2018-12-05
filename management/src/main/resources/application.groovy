@@ -8,7 +8,7 @@ hibernate {
         auto = "create-drop"
     }
 }
-router.static.resources.enabled = true
-router.static.resources.mapping = "/static/**"
-router.static.resources.paths = "classpath:static"
+router.staticResources.default.enabled = true
+router.staticResources.default.mapping = "/static/**"
+router.staticResources.default.paths = "classpath:static"
 galecino.pwmFrequency = 20
